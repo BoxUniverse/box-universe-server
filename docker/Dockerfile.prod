@@ -1,0 +1,9 @@
+FROM node:lts
+WORKDIR /server
+COPY ./server .
+RUN yarn install --production 
+CMD [ "yarn", "build" ]
+CMD [ "yarn", "start:prod" ]
+
+EXPOSE 3000
+
