@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": false,
+    "strict": false,
+    "paths": {
+      "@pipes/*": ["./src/common/pipes/*"],
+      "@validators/*": ["./src/common/validators/*"],
+      "@filters/*": ["./src/common/filters/*"],
+      "@s3/*": ["./src/s3/*"],
+      "@decorators/*": ["./src/common/decorators/*"],
+      "@exceptions/*": ["./src/common/exceptions/*"],
+      "@guards/*": ["./src/common/guards/*"],
+      "@graphql/*": ["./src/common/graphql/*"],
+      "@src/*": ["./src/*"],
+      "@users/*": ["./src/users/*"]
+    },
+    "types": []
+  },
+  "exclude": ["node_modules/*", ".eslintrc.js", "node_modules"]
+}
