@@ -1,0 +1,1 @@
+export { DeleteResult } from './DeleteResult';
