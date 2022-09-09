@@ -5,10 +5,15 @@ import { Injectable } from '@nestjs/common';
 import { DeleteResult, ObjectId, UpdateResult } from 'mongodb';
 import { CreateInput } from '@users/dto/create.input';
 import { OAuthInput } from '@users/dto/oauth.input';
+import { ProfilesRepository } from '@src/profiles/profiles.repository';
+import { UserOAuth } from './types/UserOAuth';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly profilesRepository: ProfilesRepository,
+  ) {}
 
   getUser(userInput: UserInput): Promise<User> {
     return this.usersRepository.getUser(userInput);
@@ -38,7 +43,20 @@ export class UsersService {
     return this.usersRepository.updateRefreshToken(userId, refreshToken);
   }
 
-  OAuth(_OAuthInput: OAuthInput): Promise<User> {
-    return this.usersRepository.OAuth(_OAuthInput);
+  async OAuth(_OAuthInput: OAuthInput): Promise<User | UserOAuth> {
+    const user = await this.usersRepository.OAuth(_OAuthInput);
+    if ('provider' in user) {
+      console.log(user);
+
+      const { id, username, email, provider } = user;
+      this.profilesRepository.createProfile({
+        id,
+        email,
+        provider,
+      });
+    }
+    // console.log(user, '57');
+
+    return user;
   }
 }

@@ -6,6 +6,10 @@ import { User, UserDocument } from './users.schema';
 import { DeleteResult, ObjectId, UpdateResult } from 'mongodb';
 import { CreateInput } from '@users/dto/create.input';
 import { OAuthInput } from '@users/dto/oauth.input';
+import * as moment from 'moment';
+import { isEqual, random, uniqWith } from 'lodash';
+import { Provider } from './users.type';
+import { UserOAuth } from './types/UserOAuth';
 
 @Injectable()
 export class UsersRepository {
@@ -42,19 +46,45 @@ export class UsersRepository {
     return this.userModel.updateOne({ _id: userId }, { refreshToken });
   }
 
-  async OAuth(OAuthInput: OAuthInput): Promise<User> {
-    const { username, email, id, provider } = OAuthInput;
-    return await this.userModel.findOneAndUpdate(
-      { 'provider.id': id, 'provider.name': provider, email, username },
-      {
-        $set: {
-          username,
-          email,
-          'provider.id': id,
-          'provider.name': provider,
-        },
-      },
-      { upsert: true, setDefaultsOnInsert: false, returnDocument: 'after' },
-    );
+  async OAuth(OAuthInput: OAuthInput): Promise<User | UserOAuth> {
+    const { email, id, provider } = OAuthInput;
+
+    const existProvider = await this.userModel.findOne({
+      email,
+      'providers.type': provider,
+      'providers.id': id,
+    });
+    if (existProvider) return existProvider as User;
+
+    const existEmail = await this.userModel.findOne({
+      email,
+    });
+
+    if (existEmail) {
+      existEmail.providers.push({ type: provider, id });
+
+      const result = await this.userModel
+        .findOneAndUpdate(
+          { email },
+          { $addToSet: { providers: { type: provider, id } } },
+          { returnDocument: 'after', returnOriginal: false },
+        )
+        .lean();
+
+      return { ...result, id, provider } as UserOAuth;
+    } else {
+      const user = new this.userModel({
+        email,
+        providers: [
+          {
+            type: provider,
+            id: id,
+          },
+        ],
+      });
+      const result = (await user.save({ validateBeforeSave: false })).toObject() as User;
+      return { ...result, id, provider };
+      // console.log(x);
+    }
   }
 }
