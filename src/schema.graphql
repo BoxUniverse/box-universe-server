@@ -1,0 +1,89 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Provider {
+  id: String!
+  type: String!
+}
+
+type User {
+  _id: ID!
+  username: String
+  password: String
+  email: String!
+  refreshToken: String
+  providers: [Provider!]!
+  deletedAt: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type DeleteResult {
+  acknowledged: Boolean!
+  deletedCount: Float!
+}
+
+type File {
+  filename: String
+  mimetype: String
+  encoding: String
+}
+
+type LoginResponse {
+  accessToken: String!
+  user: User!
+}
+
+type AccessTokenResponse {
+  accessToken: String!
+}
+
+type Query {
+  me: User
+  getUser(userInput: UserInput!): User
+  getListUsers: [User!]
+  refreshAccessToken(userInput: UserInput!): AccessTokenResponse
+}
+
+input UserInput {
+  _id: String
+  username: String
+  password: String
+  email: String
+  refreshToken: String
+}
+
+type Mutation {
+  uploadImage(image: Upload!): File
+  deleteUser(userInput: UserInput!): User
+  softDeleteUser(userInput: UserInput!): User
+  deleteEntireUser: DeleteResult
+  createUser(createInput: CreateInput!): User
+  login(userInput: UserInput!): LoginResponse
+  OAuth(OAuthInput: OAuthInput!): User!
+  register(createInput: CreateInput!): User!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input CreateInput {
+  username: String
+  password: String
+  email: String
+  provider: ProviderInput!
+}
+
+input ProviderInput {
+  id: String
+  type: String!
+}
+
+input OAuthInput {
+  id: String
+  username: String
+  email: String
+  provider: String
+  nonce: String
+}

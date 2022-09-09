@@ -18,7 +18,6 @@ export class ValidationExceptionFilter implements ExceptionFilter {
         code: 26042,
       };
     });
-    console.log(listErrors);
 
     return new BadRequestException(listErrors, 'ValidationError');
   }
