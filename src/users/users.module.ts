@@ -6,6 +6,10 @@ import { User, UserSchema } from './users.schema';
 import { UsersRepository } from './users.repository';
 import { hashSync } from 'bcrypt';
 import { S3Module } from 'src/s3/s3.module';
+import { isEqual, random, uniqWith } from 'lodash';
+import { Provider } from '@users/users.type';
+import * as moment from 'moment';
+import { ProfilesModule } from '@src/profiles/profiles.module';
 
 @Module({
   imports: [
@@ -15,13 +19,21 @@ import { S3Module } from 'src/s3/s3.module';
         useFactory: () => {
           const schema = UserSchema;
           schema.pre('save', function () {
-            this.password = hashSync(this.password, 10);
+            const nowUnix = moment().format('x');
+
+            const toUnix = moment()
+              .add(`${random(0, 100)}`, 'seconds')
+              .format('x');
+            const password = this.password ?? random(+nowUnix, +toUnix).toString();
+            this.providers = uniqWith<Provider>(this.providers, isEqual);
+            this.password = hashSync(password, parseInt(process.env.SALT));
           });
           return schema;
         },
       },
     ]),
     S3Module,
+    ProfilesModule,
   ],
   providers: [UsersService, UsersResolver, UsersRepository],
   exports: [UsersService, UsersRepository],

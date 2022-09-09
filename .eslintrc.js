@@ -14,11 +14,19 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js', 'node_modules*/', 'e2e/', 'dist/'],
   rules: {
+    '@typescript-eslint/no-namespace': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     'no-console': 'error',
+    'prettier/prettier': [
+      'off',
+      {
+        singleQuote: true,
+        parser: 'flow',
+      },
+    ],
   },
 };
