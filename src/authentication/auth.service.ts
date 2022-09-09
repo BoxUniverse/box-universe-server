@@ -7,6 +7,7 @@ import { LoginResponse } from './types/LoginResponse';
 import { UserInput } from '@users/dto/user.input';
 import { OAuthInput } from '@users/dto/oauth.input';
 import { Payload } from './types/Payload';
+import { UserOAuth } from '@src/users/types/UserOAuth';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,6 @@ export class AuthService {
       email: user.email,
       sub: user._id,
     };
-    console.log(payload);
 
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: process.env.TIME_EXPIRE_REFRESH_TOKEN,
@@ -49,7 +49,7 @@ export class AuthService {
     };
   }
 
-  public OAuth(_OAuthInput: OAuthInput): Promise<User> {
+  public OAuth(_OAuthInput: OAuthInput): Promise<User | UserOAuth> {
     return this.usersService.OAuth(_OAuthInput);
   }
   public async refreshAccessToken(userInput: UserInput) {

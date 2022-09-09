@@ -11,10 +11,12 @@ import { MongooseExceptionFilter } from '@filters/mongoose.filter';
 import { CreateInput } from '@users/dto/create.input';
 import { OAuthInput } from '@users/dto/oauth.input';
 import * as crypto from 'crypto';
+
 @Resolver()
 export class AuthResolver {
   constructor(private authService: AuthService, private usersService: UsersService) {}
 
+  // provider with account system
   @Mutation(() => LoginResponse, {
     name: 'login',
     nullable: true,
@@ -24,22 +26,18 @@ export class AuthResolver {
     return this.authService.login(context.user._doc);
   }
 
+  // login with provider
   @Mutation(() => User, {
     name: 'OAuth',
     nullable: false,
   })
   public OAuth(@Args('OAuthInput') _OAuthInput: OAuthInput) {
-    const { username, email, id, provider, nonce } = _OAuthInput;
-    const input = JSON.stringify({
-      username,
-      email,
-      provider,
-    });
+    const { id, provider, nonce } = _OAuthInput;
     const data = `${id}.${provider}.${process.env.SECRET}`;
     const hash = crypto.createHash('md5').update(data).digest('hex');
 
     if (hash === nonce) return this.authService.OAuth(_OAuthInput);
-    else throw new BadRequestException();
+    else throw new BadRequestException('Error Not Found');
   }
 
   @Mutation(() => User, {

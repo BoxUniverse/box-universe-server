@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  Catch,
-  ConflictException,
-  ExceptionFilter,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Catch, ConflictException, ExceptionFilter } from '@nestjs/common';
 
 import { startCase } from 'lodash';
 @Catch()
@@ -15,7 +9,7 @@ export class MongooseExceptionFilter implements ExceptionFilter {
         const key = startCase(Object.keys(exception.keyValue)[0]);
         return new ConflictException(`${key} already exist`);
       default:
-        return new BadRequestException(exception?.response?.message);
+        return new ConflictException(exception?.response?.message);
     }
   }
 }
