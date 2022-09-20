@@ -35,6 +35,7 @@ module.exports = function (options, webpack) {
         '@graphql': path.resolve('./src/common/graphql/'),
         '@validators': path.resolve('./src/common/validators/'),
         '@users': path.resolve('./src/users/'),
+        '@profiles': path.resolve('./src/profiles/'),
       },
     },
   };

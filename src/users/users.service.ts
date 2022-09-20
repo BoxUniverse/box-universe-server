@@ -1,17 +1,19 @@
 import { User } from '@users/users.schema';
 import { UserInput } from './dto/user.input';
 import { UsersRepository } from './users.repository';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DeleteResult, ObjectId, UpdateResult } from 'mongodb';
 import { CreateInput } from '@users/dto/create.input';
 import { OAuthInput } from '@users/dto/oauth.input';
-import { ProfilesRepository } from '@src/profiles/profiles.repository';
+
+import { ProfilesRepository } from '@profiles/profiles.repository';
 import { UserOAuth } from './types/UserOAuth';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly usersRepository: UsersRepository,
+    @Inject(forwardRef(() => ProfilesRepository))
     private readonly profilesRepository: ProfilesRepository,
   ) {}
 
@@ -23,8 +25,15 @@ export class UsersService {
     return this.usersRepository.getListUsers();
   }
 
-  createUser(createInput: CreateInput): Promise<User> {
-    return this.usersRepository.createUser(createInput);
+  async createUser(createInput: CreateInput): Promise<User> {
+    const user = await this.usersRepository.createUser(createInput);
+
+    this.profilesRepository.createProfile({
+      provider: 'credentials',
+      id: user._id.toString(),
+      email: user.email,
+    });
+    return user;
   }
 
   deleteUser(userInput: UserInput): Promise<User> {

@@ -28,7 +28,8 @@
       "@guards/*": ["./src/common/guards/*"],
       "@graphql/*": ["./src/common/graphql/*"],
       "@src/*": ["./src/*"],
-      "@users/*": ["./src/users/*"]
+      "@users/*": ["./src/users/*"],
+      "@profiles/*": ["./src/profiles/*"]
     },
     "types": []
   },

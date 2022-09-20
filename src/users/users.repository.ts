@@ -6,9 +6,6 @@ import { User, UserDocument } from './users.schema';
 import { DeleteResult, ObjectId, UpdateResult } from 'mongodb';
 import { CreateInput } from '@users/dto/create.input';
 import { OAuthInput } from '@users/dto/oauth.input';
-import * as moment from 'moment';
-import { isEqual, random, uniqWith } from 'lodash';
-import { Provider } from './users.type';
 import { UserOAuth } from './types/UserOAuth';
 
 @Injectable()
@@ -24,8 +21,18 @@ export class UsersRepository {
   }
 
   async createUser(createInput: CreateInput): Promise<User> {
-    const createdUser = new this.userModel(createInput);
-    return createdUser.save();
+    const { username, password, email, provider } = createInput;
+    const document = this.userModel.create({
+      username,
+      password,
+      email,
+      providers: [
+        {
+          type: provider.type,
+        },
+      ],
+    });
+    return document;
   }
 
   async deleteUser(userInput: UserInput): Promise<User> {
@@ -84,7 +91,6 @@ export class UsersRepository {
       });
       const result = (await user.save({ validateBeforeSave: false })).toObject() as User;
       return { ...result, id, provider };
-      // console.log(x);
     }
   }
 }
