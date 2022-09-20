@@ -1,6 +1,11 @@
-import { ArgsType, Field, InputType } from '@nestjs/graphql';
+import { ArgsType, createUnionType, Field, InputType } from '@nestjs/graphql';
 import { IsEmail, IsString, Length, IsNotEmpty } from 'class-validator';
 import { ProviderInput } from '../users.type';
+
+export const _ProviderInput = createUnionType({
+  name: '_ProviderInput',
+  types: () => [ProviderInput, String] as const,
+});
 
 @ArgsType()
 @InputType()

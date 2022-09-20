@@ -13,6 +13,13 @@ namespace ProfileInput {
     @Field()
     provider: string;
   }
+
+  @ArgsType()
+  @InputType()
+  export class Search {
+    @Field()
+    keyword: string;
+  }
 }
 
 export default ProfileInput;

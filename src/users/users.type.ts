@@ -9,8 +9,8 @@ export type ProvidersType = 'FACEBOOK' | 'GOOGLE' | 'GITHUB' | 'DISCORD';
 
 @ObjectType()
 export class Provider {
-  @Field()
-  id: string;
+  @Field({ nullable: true })
+  id?: string;
   @Field()
   type: string;
 }

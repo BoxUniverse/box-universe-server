@@ -10,6 +10,7 @@ import { isEqual, random, uniqWith } from 'lodash';
 import { Provider } from '@users/users.type';
 import * as moment from 'moment';
 import { ProfilesModule } from '@src/profiles/profiles.module';
+import { ObjectId } from 'mongodb';
 
 @Module({
   imports: [
@@ -25,7 +26,10 @@ import { ProfilesModule } from '@src/profiles/profiles.module';
               .add(`${random(0, 100)}`, 'seconds')
               .format('x');
             const password = this.password ?? random(+nowUnix, +toUnix).toString();
-            this.providers = uniqWith<Provider>(this.providers, isEqual);
+            // register for email first time appearance
+            if (this.providers[0].type === 'credentials') {
+              this.providers[0].id = this._id.toString();
+            }
             this.password = hashSync(password, parseInt(process.env.SALT));
           });
           return schema;

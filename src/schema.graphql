@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Provider {
-  id: String!
+  id: String
   type: String!
 }
 
@@ -17,6 +17,13 @@ type User {
   deletedAt: String!
   createdAt: String!
   updatedAt: String!
+}
+
+type Profile {
+  id: String!
+  name: String!
+  email: String!
+  provider: String!
 }
 
 type DeleteResult {
@@ -43,6 +50,7 @@ type Query {
   me: User
   getUser(userInput: UserInput!): User
   getListUsers: [User!]
+  searchUser(searchInput: Search!): [Profile!]!
   refreshAccessToken(userInput: UserInput!): AccessTokenResponse
 }
 
@@ -52,6 +60,10 @@ input UserInput {
   password: String
   email: String
   refreshToken: String
+}
+
+input Search {
+  keyword: String!
 }
 
 type Mutation {
