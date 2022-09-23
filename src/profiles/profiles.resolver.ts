@@ -6,10 +6,7 @@ import { UsersService } from '@users/users.service';
 
 @Resolver()
 export class ProfilesResolver {
-  constructor(
-    private readonly profilesService: ProfilesService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly profilesService: ProfilesService) {}
 
   @Query(() => [Profile])
   async searchUser(
@@ -17,5 +14,12 @@ export class ProfilesResolver {
     searchInput: ProfileInput.Search,
   ): Promise<Profile[]> {
     return this.profilesService.searchUser(searchInput);
+  }
+
+  @Query(() => Profile)
+  async getProfile(
+    @Args({ name: 'profileInput', type: () => ProfileInput.Obtain }) profileInput: Partial<Profile>,
+  ): Promise<Profile> {
+    return this.profilesService.getProfile(profileInput);
   }
 }

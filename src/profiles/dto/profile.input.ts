@@ -1,4 +1,5 @@
-import { ArgsType, Field, InputType } from '@nestjs/graphql';
+import { ArgsType, Field, InputType, PartialType } from '@nestjs/graphql';
+import { Profile } from '../profiles.schema';
 
 namespace ProfileInput {
   @ArgsType()
@@ -18,6 +19,13 @@ namespace ProfileInput {
   export class Search {
     @Field()
     keyword: string;
+  }
+
+  @ArgsType()
+  @InputType()
+  export class Obtain {
+    @Field()
+    id: string;
   }
 }
 
