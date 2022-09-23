@@ -14,7 +14,6 @@ namespace ProfileInput {
     @Field()
     provider: string;
   }
-
   @ArgsType()
   @InputType()
   export class Search {

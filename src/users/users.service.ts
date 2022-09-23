@@ -5,8 +5,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DeleteResult, ObjectId, UpdateResult } from 'mongodb';
 import { CreateInput } from '@users/dto/create.input';
 import { OAuthInput } from '@users/dto/oauth.input';
-
-import { ProfilesRepository } from '@profiles/profiles.repository';
+import { ProfilesRepository } from '@src/profiles/profiles.repository';
 import { UserOAuth } from './types/UserOAuth';
 
 @Injectable()
@@ -55,9 +54,7 @@ export class UsersService {
   async OAuth(_OAuthInput: OAuthInput): Promise<User | UserOAuth> {
     const user = await this.usersRepository.OAuth(_OAuthInput);
     if ('provider' in user) {
-      console.log(user);
-
-      const { id, username, email, provider } = user;
+      const { id, email, provider } = user;
       this.profilesRepository.createProfile({
         id,
         email,
