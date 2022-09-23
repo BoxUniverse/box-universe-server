@@ -17,4 +17,9 @@ export class ProfilesRepository {
       name: { $regex: `.*${searchInput.keyword}.*`, $options: 'i' },
     });
   }
+
+  async getProfile(profileInput: Partial<Profile>): Promise<Profile> {
+    const { id } = profileInput;
+    return this.profileModel.findOne({ id });
+  }
 }
