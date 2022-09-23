@@ -51,6 +51,7 @@ type Query {
   getUser(userInput: UserInput!): User
   getListUsers: [User!]
   searchUser(searchInput: Search!): [Profile!]!
+  getProfile(profileInput: Obtain!): Profile!
   refreshAccessToken(userInput: UserInput!): AccessTokenResponse
 }
 
@@ -64,6 +65,10 @@ input UserInput {
 
 input Search {
   keyword: String!
+}
+
+input Obtain {
+  id: String!
 }
 
 type Mutation {
