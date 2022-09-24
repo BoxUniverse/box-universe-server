@@ -16,10 +16,12 @@ import { UsersModule } from '@users/users.module';
         useFactory: () => {
           const schema = ProfileSchema;
           schema.pre('save', function () {
-            const [username] = this.email.split('@');
-            const nowUnix = moment().format('x');
-            const uniqUsername = `${username}${nowUnix}`;
-            this.name = uniqUsername;
+            if (this.provider === 'credentials') {
+              const [username] = this.email.split('@');
+              const nowUnix = moment().format('x');
+              const uniqUsername = `${username}${nowUnix}`;
+              this.name = uniqUsername;
+            }
           });
 
           return schema;

@@ -10,10 +10,9 @@ export class OAuthInput {
   id: string;
 
   @IsString()
-  @Length(6, 15)
   @IsNotEmpty()
   @Field(() => String, { nullable: true })
-  username: string;
+  name: string;
 
   @IsString()
   @IsNotEmpty()
