@@ -99,7 +99,7 @@ input ProviderInput {
 
 input OAuthInput {
   id: String
-  username: String
+  name: String
   email: String
   provider: String
   nonce: String

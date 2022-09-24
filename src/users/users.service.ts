@@ -29,6 +29,7 @@ export class UsersService {
 
     this.profilesRepository.createProfile({
       provider: 'credentials',
+      name: user.email,
       id: user._id.toString(),
       email: user.email,
     });
@@ -55,8 +56,10 @@ export class UsersService {
     const user = await this.usersRepository.OAuth(_OAuthInput);
     if ('provider' in user) {
       const { id, email, provider } = user;
+      const { name } = _OAuthInput;
       this.profilesRepository.createProfile({
         id,
+        name,
         email,
         provider,
       });
