@@ -21,41 +21,41 @@ import { MongooseExceptionFilter } from '@filters/mongoose.filter';
 export class UsersResolver {
   constructor(private readonly usersService: UsersService, private readonly s3Service: S3Service) {}
 
-  @UseFilters(GraphQLExceptionFilter)
-  @Mutation(() => File, {
-    name: 'uploadImage',
-    nullable: true,
-  })
-  async upload(
-    @Args({ name: 'image', type: () => GraphQLUpload }) file: FileUpload,
-  ): Promise<File> {
-    const { filename, mimetype, encoding, createReadStream } = file;
-    const stream = createReadStream();
-    const chunks = [];
-    const buffer = await new Promise<Buffer>((resolve, reject) => {
-      let buffer: Buffer;
-
-      stream.on('data', function (chunk) {
-        chunks.push(chunk);
-      });
-
-      stream.on('end', function () {
-        buffer = Buffer.concat(chunks);
-        resolve(buffer);
-      });
-
-      stream.on('error', reject);
-    });
-    if (mimetype.startsWith('image')) {
-      this.s3Service.uploadImage({ buffer, filename, mimetype, encoding });
-      return { filename, mimetype, encoding };
-    } else {
-      throw new GraphQLException(
-        'File type invalid, please upload only image',
-        HttpStatus.NOT_ACCEPTABLE,
-      );
-    }
-  }
+  // @UseFilters(GraphQLExceptionFilter)
+  // @Mutation(() => File, {
+  //   name: 'uploadImage',
+  //   nullable: true,
+  // })
+  // async upload(
+  //   @Args({ name: 'image', type: () => GraphQLUpload }) file: FileUpload,
+  // ): Promise<File> {
+  //   const { filename, mimetype, encoding, createReadStream } = file;
+  //   const stream = createReadStream();
+  //   const chunks = [];
+  //   const buffer = await new Promise<Buffer>((resolve, reject) => {
+  //     let buffer: Buffer;
+  //
+  //     stream.on('data', function (chunk) {
+  //       chunks.push(chunk);
+  //     });
+  //
+  //     stream.on('end', function () {
+  //       buffer = Buffer.concat(chunks);
+  //       resolve(buffer);
+  //     });
+  //
+  //     stream.on('error', reject);
+  //   });
+  //   if (mimetype.startsWith('image')) {
+  //     this.s3Service.uploadImage({ buffer, filename, mimetype, encoding });
+  //     return { filename, mimetype, encoding };
+  //   } else {
+  //     throw new GraphQLException(
+  //       'File type invalid, please upload only image',
+  //       HttpStatus.NOT_ACCEPTABLE,
+  //     );
+  //   }
+  // }
 
   @Query(() => User, {
     name: 'me',

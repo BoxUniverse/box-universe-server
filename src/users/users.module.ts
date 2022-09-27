@@ -6,11 +6,9 @@ import { User, UserSchema } from './users.schema';
 import { UsersRepository } from './users.repository';
 import { hashSync } from 'bcrypt';
 import { S3Module } from 'src/s3/s3.module';
-import { isEqual, random, uniqWith } from 'lodash';
-import { Provider } from '@users/users.type';
+import { random } from 'lodash';
 import * as moment from 'moment';
 import { ProfilesModule } from '@src/profiles/profiles.module';
-import { ObjectId } from 'mongodb';
 
 @Module({
   imports: [

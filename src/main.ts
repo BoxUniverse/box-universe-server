@@ -30,7 +30,6 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new MongoExceptionFilter());
-  app.use(graphqlUploadExpress({ maxFileSize: 2 * 1000 * 1000 }));
   app.use(compression());
   app.use(
     helmet({
@@ -47,6 +46,8 @@ async function bootstrap() {
       saveUninitialized: false,
     }),
   );
+
+  app.use(graphqlUploadExpress({ maxFileSize: 2 * 1000 * 1000, maxFiles: 10 }));
   // app.use(csurf({ cookie: true }));
   await app.listen(process.env.PORT);
   if (module.hot) {
