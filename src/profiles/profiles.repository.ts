@@ -22,4 +22,7 @@ export class ProfilesRepository {
     const { id } = profileInput;
     return this.profileModel.findOne({ id });
   }
+  async updateAvatar(url: string, id: string) {
+    return this.profileModel.findOneAndUpdate({ id }, { avatar: url }, { returnDocument: 'after' });
+  }
 }

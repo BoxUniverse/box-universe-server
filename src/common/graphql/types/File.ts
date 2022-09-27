@@ -10,4 +10,7 @@ export class File {
 
   @Field({ nullable: true })
   encoding: string;
+
+  @Field({ nullable: true })
+  url: string;
 }

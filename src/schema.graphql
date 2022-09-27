@@ -23,6 +23,7 @@ type Profile {
   id: String!
   name: String!
   email: String!
+  avatar: String!
   provider: String!
 }
 
@@ -35,6 +36,7 @@ type File {
   filename: String
   mimetype: String
   encoding: String
+  url: String
 }
 
 type LoginResponse {
@@ -72,18 +74,15 @@ input Obtain {
 }
 
 type Mutation {
-  uploadImage(image: Upload!): File
   deleteUser(userInput: UserInput!): User
   softDeleteUser(userInput: UserInput!): User
   deleteEntireUser: DeleteResult
   createUser(createInput: CreateInput!): User
+  uploadAvatar(file: Upload!, id: String!): File
   login(userInput: UserInput!): LoginResponse
   OAuth(OAuthInput: OAuthInput!): User!
   register(createInput: CreateInput!): User!
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input CreateInput {
   username: String
@@ -96,6 +95,9 @@ input ProviderInput {
   id: String
   type: String!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 input OAuthInput {
   id: String
