@@ -1,4 +1,5 @@
-import { ArgsType, Field, InputType, PartialType } from '@nestjs/graphql';
+import { Args, ArgsType, Field, InputType, PartialType } from '@nestjs/graphql';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
 namespace ProfileInput {
   @ArgsType()
@@ -27,6 +28,16 @@ namespace ProfileInput {
   @InputType()
   export class Obtain {
     @Field()
+    id: string;
+  }
+
+  @ArgsType()
+  @InputType()
+  export class _Upload_ {
+    @Field(() => GraphQLUpload)
+    file: FileUpload;
+
+    @Field(() => String)
     id: string;
   }
 }

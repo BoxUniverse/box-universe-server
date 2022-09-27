@@ -19,6 +19,10 @@ export class Profile {
   @Field(() => String)
   email: string;
 
+  @Prop({ default: `${process.env.DEFAULT_AVATAR}` })
+  @Field(() => String)
+  avatar: string;
+
   @Prop()
   @Field(() => String)
   provider: string;

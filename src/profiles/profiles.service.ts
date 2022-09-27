@@ -13,4 +13,7 @@ export class ProfilesService {
   async getProfile(profileInput: Partial<Profile>): Promise<Profile> {
     return this.profilesRepository.getProfile(profileInput);
   }
+  async updateAvatar(url: string, id: string) {
+    return this.profilesRepository.updateAvatar(url, id);
+  }
 }
