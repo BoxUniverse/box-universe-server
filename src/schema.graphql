@@ -25,6 +25,7 @@ type Profile {
   email: String!
   avatar: String!
   provider: String!
+  friendIds: [String!]!
 }
 
 type DeleteResult {
@@ -52,6 +53,7 @@ type Query {
   me: User
   getUser(userInput: UserInput!): User
   getListUsers: [User!]
+  getEntireProfile: [Profile!]!
   searchUser(searchInput: Search!): [Profile!]!
   getProfile(profileInput: Obtain!): Profile!
   refreshAccessToken(userInput: UserInput!): AccessTokenResponse
