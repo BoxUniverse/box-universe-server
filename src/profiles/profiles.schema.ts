@@ -26,6 +26,10 @@ export class Profile {
   @Prop()
   @Field(() => String)
   provider: string;
+
+  @Prop({ default: [] })
+  @Field(() => [String])
+  friendIds: Array<string>;
 }
 
 export const ProfileSchema = SchemaFactory.createForClass(Profile);

@@ -6,9 +6,10 @@ import { File } from '@graphql/types/File';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { S3Service } from '@s3/s3.service';
 import { GraphQLException } from '@exceptions/graphql.exception';
-import { HttpStatus, NotFoundException } from '@nestjs/common';
+import { CACHE_MANAGER, HttpStatus, Inject, NotFoundException } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { Cache } from 'cache-manager';
 
 @Resolver()
 export class ProfilesResolver {
@@ -16,14 +17,36 @@ export class ProfilesResolver {
     private readonly profilesService: ProfilesService,
     private readonly s3Service: S3Service,
     @InjectQueue('profile-queue') private readonly profileQueue: Queue,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
+
+  @Query(() => [Profile])
+  async getEntireProfile(): Promise<Profile[]> {
+    this.cacheManager.get<string>('list.profiles', (error, result) => {
+      console.log(result);
+
+      if (!error) return JSON.parse(result);
+    });
+
+    return this.profilesService.searchUser({ keyword: '' });
+  }
 
   @Query(() => [Profile])
   async searchUser(
     @Args({ name: 'searchInput', type: () => ProfileInput.Search })
     searchInput: ProfileInput.Search,
   ): Promise<Profile[]> {
-    return this.profilesService.searchUser(searchInput);
+    this.cacheManager.get<string>('list.profiles', (error, result) => {
+      console.log(result);
+
+      if (!error) return JSON.parse(result);
+    });
+    const list = await this.profilesService.searchUser(searchInput);
+
+    this.cacheManager.set('list-profile', JSON.stringify(list), {
+      ttl: 60,
+    });
+    return list;
   }
 
   @Query(() => Profile)
@@ -45,7 +68,11 @@ export class ProfilesResolver {
     if (mimetype.startsWith('image')) {
       const url = await this.s3Service.uploadImage(file);
       if (typeof url === 'string') {
-        this.profileQueue.add('updateAvatar', { url, id });
+        this.profileQueue.add(
+          'updateAvatar',
+          { url, id },
+          { removeOnComplete: true, removeOnFail: true },
+        );
 
         return { url, filename, mimetype, encoding };
       } else {
