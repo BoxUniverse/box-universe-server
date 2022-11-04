@@ -1,22 +1,11 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '@users/users.module';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
-  imports: [
-    UsersModule,
-    PassportModule,
-    JwtModule.register({
-      secret: process.env.SECRET,
-      signOptions: { expiresIn: process.env.TIME_EXPIRE_ACCESS_TOKEN, algorithm: 'HS512' },
-    }),
-  ],
-  providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
+  imports: [UsersModule],
+  providers: [AuthService, AuthResolver],
   exports: [AuthService],
 })
 export class AuthModule {}

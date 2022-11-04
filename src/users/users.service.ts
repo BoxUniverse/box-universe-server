@@ -64,7 +64,6 @@ export class UsersService {
         provider,
       });
     }
-    // console.log(user, '57');
 
     return user;
   }

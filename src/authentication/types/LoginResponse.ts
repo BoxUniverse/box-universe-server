@@ -4,8 +4,8 @@ import { User } from '@users/users.schema';
 @ObjectType()
 export class LoginResponse {
   @Field()
-  accessToken: string;
+  refreshToken: string;
 
   @Field(() => User)
-  user: User;
+  user: Partial<User>;
 }

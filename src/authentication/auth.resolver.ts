@@ -1,29 +1,30 @@
-import { BadRequestException, UseFilters, UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Resolver, Query } from '@nestjs/graphql';
-import { UserInput } from '@users/dto/user.input';
-import { LocalAuthGuard } from 'src/common/guards/authLocal.guard';
+import { BadRequestException, UseFilters } from '@nestjs/common';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { LoginResponse } from './types/LoginResponse';
-import { AccessTokenResponse } from './types/AccessTokenResponse';
 import { User } from '@users/users.schema';
 import { UsersService } from '@users/users.service';
 import { MongooseExceptionFilter } from '@filters/mongoose.filter';
 import { CreateInput } from '@users/dto/create.input';
 import { OAuthInput } from '@users/dto/oauth.input';
 import * as crypto from 'crypto';
+import { LoginInput } from './dto/loginInput.input';
 
 @Resolver()
 export class AuthResolver {
   constructor(private authService: AuthService, private usersService: UsersService) {}
 
   // provider with account system
-  @Mutation(() => LoginResponse, {
+  @Mutation(() => User, {
     name: 'login',
     nullable: true,
   })
-  @UseGuards(LocalAuthGuard)
-  public login(@Args('userInput') userInput: UserInput, @Context() context: any) {
-    return this.authService.login(context.user._doc);
+  public async login(@Args('loginInput') loginInput: LoginInput) {
+    const { username, password, nonce } = loginInput;
+    const data = `${username}.${password}.${process.env.SECRET}`;
+    const hash = crypto.createHash('md5').update(data).digest('hex');
+
+    if (hash === nonce) return this.authService.validateUser(username, password);
+    throw new BadRequestException('Request nonce is invalid');
   }
 
   // login with provider
@@ -48,8 +49,8 @@ export class AuthResolver {
   public async register(@Args('createInput') createInput: CreateInput) {
     return await this.usersService.createUser(createInput);
   }
-  @Query(() => AccessTokenResponse, { name: 'refreshAccessToken', nullable: true })
-  public refreshAccessToken(@Args('userInput') userInput: UserInput) {
-    return this.authService.refreshAccessToken(userInput);
-  }
+  // @Query(() => AccessTokenResponse, { name: 'refreshAccessToken', nullable: true })
+  // public refreshAccessToken(@Args('userInput') userInput: UserInput) {
+  //   return this.authService.refreshAccessToken(userInput);
+  // }
 }
