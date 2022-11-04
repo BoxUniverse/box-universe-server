@@ -3,21 +3,17 @@ import { RequireAtLeast } from '@pipes/RequireAtLeast.pipe';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User } from './users.schema';
 import { UsersService } from '@users/users.service';
-import { HttpStatus, UseFilters, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@guards/authJwt.guard';
-import Current from '@decorators/Current.decorator';
+import { UseFilters, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@guards/auth.guard';
 import { UpdateResult } from 'mongodb';
 import { DeleteResult } from '@graphql/types/DeleteResult';
-import { File } from '@graphql/types/File';
-import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { S3Service } from '@s3/s3.service';
-import { GraphQLException } from '@exceptions/graphql.exception';
 import { CreateInput } from '@users/dto/create.input';
-import { GraphQLExceptionFilter } from '@filters/graphql.filter';
 import { MongooseExceptionFilter } from '@filters/mongoose.filter';
+import { Authorization } from '@decorators/Authorization.decorator';
 
 @Resolver(() => User)
-@UseGuards(JwtAuthGuard)
+@UseGuards(AuthGuard)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService, private readonly s3Service: S3Service) {}
 
@@ -57,11 +53,20 @@ export class UsersResolver {
   //   }
   // }
 
+  // @Query(() => User, {
+  //   name: 'me',
+  //   nullable: true,
+  // })
+  // async getMe(@Current() user: User): Promise<User> {
+  //   return user;
+  // }
   @Query(() => User, {
     name: 'me',
     nullable: true,
   })
-  async getMe(@Current() user: User): Promise<User> {
+  async getMe(@Authorization() user: User): Promise<User> {
+    console.log(user);
+
     return user;
   }
 

@@ -40,15 +40,6 @@ type File {
   url: String
 }
 
-type LoginResponse {
-  accessToken: String!
-  user: User!
-}
-
-type AccessTokenResponse {
-  accessToken: String!
-}
-
 type Query {
   me: User
   getUser(userInput: UserInput!): User
@@ -56,7 +47,6 @@ type Query {
   getEntireProfile: [Profile!]!
   searchUser(searchInput: Search!): [Profile!]!
   getProfile(profileInput: Obtain!): Profile!
-  refreshAccessToken(userInput: UserInput!): AccessTokenResponse
 }
 
 input UserInput {
@@ -81,7 +71,7 @@ type Mutation {
   deleteEntireUser: DeleteResult
   createUser(createInput: CreateInput!): User
   uploadAvatar(file: Upload!, id: String!): File
-  login(userInput: UserInput!): LoginResponse
+  login(loginInput: LoginInput!): User
   OAuth(OAuthInput: OAuthInput!): User!
   register(createInput: CreateInput!): User!
 }
@@ -100,6 +90,12 @@ input ProviderInput {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+input LoginInput {
+  username: String!
+  password: String!
+  nonce: String!
+}
 
 input OAuthInput {
   id: String

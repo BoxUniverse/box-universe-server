@@ -1,7 +1,5 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
-import { ProfilesRepository } from '@profiles/profiles.repository';
-import { S3Service } from '@s3/s3.service';
 import { S3 } from 'aws-sdk';
 
 @Processor('upload-queue')
