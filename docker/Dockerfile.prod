@@ -1,8 +1,11 @@
-FROM node:lts
+FROM node:16.13
 WORKDIR /server
+COPY ./server/package.json .
+RUN yarn install
 COPY ./server .
-RUN yarn install --production 
 CMD [ "yarn", "start:prod" ]
-
 EXPOSE 3000
+
+
+
 

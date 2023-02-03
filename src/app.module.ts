@@ -10,7 +10,14 @@ import { S3Module } from './s3/s3.module';
 import { UsersService } from '@users/users.service';
 import { ProfilesModule } from './profiles/profiles.module';
 import { BullModule } from '@nestjs/bull';
+import { RelationshipsModule } from './relationships/relationships.module';
+import { EventsModule } from './events/events.module';
 import * as redisStore from 'cache-manager-redis-store';
+import { AppGateway } from './app.gateway';
+import { RequestsModule } from './requests/requests.module';
+import { FriendsModule } from './friends/friends.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { ConversationsModule } from './conversations/conversations.module';
 
 @Module({
   imports: [
@@ -27,11 +34,18 @@ import * as redisStore from 'cache-manager-redis-store';
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
       playground: true,
       csrfPrevention: false,
+
+      installSubscriptionHandlers: true,
+      subscriptions: {
+        'graphql-ws': {
+          path: '/subscription',
+        },
+      },
       cors: {
         origin: '*',
         credentials: true,
       },
-      debug: true,
+      debug: process.env.NODE_ENV !== 'production',
       path: '/',
       context: ({ req, res }) => ({ req, res }),
     }),
@@ -39,7 +53,13 @@ import * as redisStore from 'cache-manager-redis-store';
     AuthModule,
     S3Module,
     ProfilesModule,
+    // RelationshipsModule,
+    EventsModule,
+    RequestsModule,
+    FriendsModule,
+    NotificationsModule,
+    ConversationsModule,
   ],
-  providers: [S3Service, UsersService],
+  providers: [S3Service, UsersService, AppGateway],
 })
 export class AppModule {}

@@ -12,4 +12,10 @@ export class ProfilesProcessor {
     const { url, id } = job.data;
     this.profilesRepository.updateAvatar(url, id);
   }
+
+  @Process('addFriend')
+  async handleAddFriend(job: Job) {
+    const { userId, friendId } = job.data;
+    return this.profilesRepository.addFriend(userId, friendId);
+  }
 }

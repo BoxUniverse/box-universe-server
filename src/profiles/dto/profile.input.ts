@@ -40,6 +40,15 @@ namespace ProfileInput {
     @Field(() => String)
     id: string;
   }
+
+  @ArgsType()
+  @InputType()
+  export class Friend {
+    @Field()
+    userId: string;
+    @Field()
+    friendId: string;
+  }
 }
 
 export default ProfileInput;

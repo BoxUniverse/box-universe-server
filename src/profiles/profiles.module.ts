@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { CacheModule, forwardRef, Module } from '@nestjs/common';
 import { ProfilesResolver } from './profiles.resolver';
 import { ProfilesService } from './profiles.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -9,10 +9,19 @@ import { UsersModule } from '@users/users.module';
 import { S3Module } from '@s3/s3.module';
 import { BullModule } from '@nestjs/bull';
 import { ProfilesProcessor } from './profiles.processor';
+import { ProfilesGateway } from './profiles.gateway';
+import { RelationshipsModule } from '@src/relationships/relationships.module';
 
 @Module({
-  providers: [ProfilesResolver, ProfilesService, ProfilesRepository, ProfilesProcessor],
+  providers: [
+    ProfilesResolver,
+    ProfilesService,
+    ProfilesRepository,
+    ProfilesProcessor,
+    ProfilesGateway,
+  ],
   imports: [
+    RelationshipsModule,
     BullModule.registerQueue({
       name: 'profile-queue',
     }),

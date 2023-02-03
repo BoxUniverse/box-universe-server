@@ -25,12 +25,29 @@ type Profile {
   email: String!
   avatar: String!
   provider: String!
-  friendIds: [String!]!
+  friends: [Profile!]!
 }
 
 type DeleteResult {
   acknowledged: Boolean!
   deletedCount: Float!
+}
+
+type Current {
+  _id: ID!
+  username: String
+  password: String
+  email: String!
+  refreshToken: String
+  providers: Provider!
+  deletedAt: String!
+  createdAt: String!
+  updatedAt: String!
+  name: String!
+  picture: String!
+
+  """id"""
+  id: String!
 }
 
 type File {
@@ -40,13 +57,36 @@ type File {
   url: String
 }
 
+type Relationship {
+  userId: String!
+  friendId: String!
+  isBlock: Boolean!
+}
+
+type Request {
+  _id: ID!
+  userRequest: Profile!
+  userReceive: Profile!
+  isAccept: Boolean!
+  isReject: Boolean!
+  isPending: Boolean!
+}
+
+type FriendsProfile {
+  friends: [Profile!]!
+}
+
 type Query {
-  me: User
+  me: Current
   getUser(userInput: UserInput!): User
   getListUsers: [User!]
   getEntireProfile: [Profile!]!
   searchUser(searchInput: Search!): [Profile!]!
   getProfile(profileInput: Obtain!): Profile!
+  retrieveRelationships(relationship: Info!): [Relationship!]
+  retrieveEntireRelationships(status: Status!): [Relationship!]
+  getRequests(request: RetrieveRequest!): [Request!]!
+  getEntireFriends: FriendsProfile
 }
 
 input UserInput {
@@ -65,15 +105,40 @@ input Obtain {
   id: String!
 }
 
+input Info {
+  friendId: ID!
+}
+
+input Status {
+  isPending: Boolean!
+  isBlock: Boolean!
+}
+
+input RetrieveRequest {
+  userRequest: ID
+  userReceive: ID
+  isPending: Boolean!
+  isReject: Boolean!
+  isAccept: Boolean!
+}
+
 type Mutation {
   deleteUser(userInput: UserInput!): User
   softDeleteUser(userInput: UserInput!): User
   deleteEntireUser: DeleteResult
   createUser(createInput: CreateInput!): User
   uploadAvatar(file: Upload!, id: String!): File
+  unfriend(friend: Friend!): Float
+  addRelationship(relationship: Create!): Relationship!
+  acceptRelationship(relationship: Info!): Relationship
+  blockRelationship(relationship: Info!): Relationship
+  unblockRelationship(relationship: Info!): Relationship
   login(loginInput: LoginInput!): User
   OAuth(OAuthInput: OAuthInput!): User!
   register(createInput: CreateInput!): User!
+  addRequest(request: CreateRequest!): Request!
+  acceptRequest(request: InfoRequest!): Request
+  rejectRequest(request: InfoRequest!): Request
 }
 
 input CreateInput {
@@ -91,6 +156,15 @@ input ProviderInput {
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
+input Friend {
+  userId: String!
+  friendId: String!
+}
+
+input Create {
+  friendId: ID!
+}
+
 input LoginInput {
   username: String!
   password: String!
@@ -103,4 +177,18 @@ input OAuthInput {
   email: String
   provider: String
   nonce: String
+}
+
+input CreateRequest {
+  userRequest: ID
+  userReceive: ID!
+}
+
+input InfoRequest {
+  userRequest: ID
+  userReceive: ID
+}
+
+type Subscription {
+  requestAdded: [Request!]!
 }

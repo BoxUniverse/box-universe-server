@@ -1,4 +1,10 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { decode } from 'next-auth/jwt';
 
@@ -12,12 +18,16 @@ export class AuthGuard implements CanActivate {
 
     const token = headers?.authorization?.replace('Bearer ', '');
     const secret = process.env.SECRET;
+
     try {
       const result = await decode({ token, secret });
       req.user = result;
+
       return true;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      // console.log('error');
+
       throw new UnauthorizedException();
     }
   }
