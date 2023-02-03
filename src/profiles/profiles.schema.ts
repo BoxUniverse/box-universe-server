@@ -1,10 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ArgsType, Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import mongoose from 'mongoose';
+import { Friend } from '@src/friends/friends.schema';
 
 export type ProfileDocument = Profile & mongoose.Document;
 
-@Schema()
+@Schema({
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+  }
+})
 @ObjectType()
 export class Profile {
   @Prop()
@@ -27,9 +33,9 @@ export class Profile {
   @Field(() => String)
   provider: string;
 
-  @Prop({ default: [] })
-  @Field(() => [String])
-  friendIds: Array<string>;
+  @Prop({ default: [], type: Array<Friend>, ref: 'Friend' })
+  @Field(() => [Profile])
+  friends: Friend[];
 }
 
 export const ProfileSchema = SchemaFactory.createForClass(Profile);

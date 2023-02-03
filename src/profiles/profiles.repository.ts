@@ -3,6 +3,8 @@ import { Profile, ProfileDocument } from '@profiles/profiles.schema';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import ProfileInput from '@profiles/dto/profile.input';
+import { FriendsProfile } from '@src/friends/types';
+import { isEmpty } from 'lodash';
 
 @Injectable()
 export class ProfilesRepository {
@@ -20,9 +22,118 @@ export class ProfilesRepository {
 
   async getProfile(profileInput: Partial<Profile>): Promise<Profile> {
     const { id } = profileInput;
-    return this.profileModel.findOne({ id });
+    const profile = await this.profileModel.aggregate<Profile>([
+      {
+        $match: {
+          id,
+        },
+      },
+      {
+        $unwind: {
+          path: '$friends',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'profiles',
+          localField: 'friends.friendId',
+          foreignField: 'id',
+          as: 'friends',
+        },
+      },
+      {
+        $unwind: {
+          path: '$friends',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          id: {
+            $first: '$id',
+          },
+          name: {
+            $first: '$name',
+          },
+          email: {
+            $first: '$email',
+          },
+          avatar: {
+            $first: '$avatar',
+          },
+          provider: {
+            $first: '$provider',
+          },
+          updatedAt: {
+            $first: '$updatedAt',
+          },
+          friends: {
+            $push: '$friends',
+          },
+          countFriend: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
+    if (!isEmpty(profile)) return profile[0];
+    return null;
+  }
+
+  async getEntireFriends(id: string): Promise<FriendsProfile> {
+    return this.profileModel.findOne(
+      { id },
+      {
+        friends: 1,
+        _id: 0,
+      },
+    );
   }
   async updateAvatar(url: string, id: string) {
     return this.profileModel.findOneAndUpdate({ id }, { avatar: url }, { returnDocument: 'after' });
+  }
+  async addFriend(userId: string, friendId: string) {
+    const model = this.profileModel;
+    const requestor = (async () => {
+      return model.updateOne(
+        { id: userId },
+        {
+          $push: { friends: { friendId, isBlock: false } },
+        },
+      );
+    })();
+    const receiver = (() => {
+      return model.updateOne(
+        { id: friendId },
+        {
+          $push: { friends: { friendId: userId, isBlock: false } },
+        },
+      );
+    })();
+    const [_receiver, _requestor] = await Promise.all([receiver, requestor]);
+    return _receiver.modifiedCount && _requestor.modifiedCount;
+  }
+  async unFriend(userId: string, friendId: string) {
+    const model = this.profileModel;
+    const requestor = (async () => {
+      return model.updateOne(
+        { id: userId },
+        {
+          $pull: { friends: { friendId } },
+        },
+      );
+    })();
+    const receiver = (() => {
+      return model.updateOne(
+        { id: friendId },
+        {
+          $pull: { friends: { friendId: userId } },
+        },
+      );
+    })();
+    const [_receiver, _requestor] = await Promise.all([receiver, requestor]);
+    return _receiver.modifiedCount && _requestor.modifiedCount;
   }
 }

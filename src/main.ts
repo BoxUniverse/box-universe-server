@@ -11,9 +11,9 @@ import * as os from 'os';
 import { MongoExceptionFilter } from '@filters/mongo.filter';
 import { config } from 'aws-sdk';
 import { graphqlUploadExpress } from 'graphql-upload';
+import { RedisIoAdapter } from './common/adapters/redis.adapter';
 
 declare const module: any;
-
 async function bootstrap() {
   const cpus = os.cpus().length;
   process.env.UV_THREADPOOL_SIZE = cpus.toString();
@@ -23,6 +23,9 @@ async function bootstrap() {
     origin: '*',
     credentials: true,
   });
+  const redisIoAdapter = new RedisIoAdapter(app);
+  await redisIoAdapter.connectToRedis();
+  app.useWebSocketAdapter(redisIoAdapter);
   config.update({
     accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,

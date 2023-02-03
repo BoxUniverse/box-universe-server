@@ -27,9 +27,13 @@
       "@exceptions/*": ["./src/common/exceptions/*"],
       "@guards/*": ["./src/common/guards/*"],
       "@graphql/*": ["./src/common/graphql/*"],
-      "@src/*": ["./src/*"],
       "@users/*": ["./src/users/*"],
-      "@profiles/*": ["./src/profiles/*"]
+      "@requests/*": ["./src/requests/*"],
+      "@relationships/*": ["./src/relationships/*"],
+      "@core/*": ["./src/core/*"],
+      "@profiles/*": ["./src/profiles/*"],
+
+      "@src/*": ["./src/*"]
     },
     "types": []
   },
