@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProfilesResolver } from './profiles.resolver';
+import { ProfilesResolver } from '@src/profiles';
 
 describe('ProfilesResolver', () => {
   let resolver: ProfilesResolver;

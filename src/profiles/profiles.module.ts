@@ -1,16 +1,20 @@
-import { CacheModule, forwardRef, Module } from '@nestjs/common';
-import { ProfilesResolver } from './profiles.resolver';
-import { ProfilesService } from './profiles.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Profile, ProfileSchema } from './profiles.schema';
-import { ProfilesRepository } from './profiles.repository';
-import * as moment from 'moment';
-import { UsersModule } from '@users/users.module';
-import { S3Module } from '@s3/s3.module';
 import { BullModule } from '@nestjs/bull';
-import { ProfilesProcessor } from './profiles.processor';
-import { ProfilesGateway } from './profiles.gateway';
-import { RelationshipsModule } from '@src/relationships/relationships.module';
+import { forwardRef, Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConversationsModule } from '@src/conversations/conversations.module';
+import { S3Module } from '@src/s3';
+import { UsersModule } from '@src/users';
+import * as moment from 'moment';
+
+import {
+  Profile,
+  ProfileSchema,
+  ProfilesGateway,
+  ProfilesProcessor,
+  ProfilesRepository,
+  ProfilesResolver,
+  ProfilesService,
+} from '@src/profiles';
 
 @Module({
   providers: [
@@ -21,7 +25,9 @@ import { RelationshipsModule } from '@src/relationships/relationships.module';
     ProfilesGateway,
   ],
   imports: [
-    RelationshipsModule,
+    forwardRef(() => UsersModule),
+    S3Module,
+    forwardRef(() => ConversationsModule),
     BullModule.registerQueue({
       name: 'profile-queue',
     }),
@@ -34,8 +40,7 @@ import { RelationshipsModule } from '@src/relationships/relationships.module';
             if (this.provider === 'credentials') {
               const [username] = this.email.split('@');
               const nowUnix = moment().format('x');
-              const uniqUsername = `${username}${nowUnix}`;
-              this.name = uniqUsername;
+              this.name = `${username}${nowUnix}`;
             }
           });
 
@@ -43,8 +48,6 @@ import { RelationshipsModule } from '@src/relationships/relationships.module';
         },
       },
     ]),
-    forwardRef(() => UsersModule),
-    S3Module,
   ],
   exports: [ProfilesService, ProfilesRepository, ProfilesResolver],
 })

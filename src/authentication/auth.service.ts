@@ -1,13 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@users/users.schema';
-import { UsersService } from '@users/users.service';
+import { OAuthInput, User, UserOAuth, UsersService } from '@src/users';
 import { compareSync } from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
-import { LoginResponse } from './types/LoginResponse';
-import { UserInput } from '@users/dto/user.input';
-import { OAuthInput } from '@users/dto/oauth.input';
-import { Payload } from './types/Payload';
-import { UserOAuth } from '@src/users/types/UserOAuth';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +11,7 @@ export class AuthService {
 
     const isCorrect = compareSync(password, user?.password || '');
     if (user && isCorrect) {
-      // console.log(user);
+      //
 
       // const {
       //   password: {},

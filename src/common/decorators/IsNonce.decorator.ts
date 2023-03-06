@@ -1,7 +1,7 @@
-import { registerDecorator, ValidationOptions } from 'class-validator';
 import { IsObjectIdConstraint } from '@validators/ObjectId.validator';
+import { registerDecorator, ValidationOptions } from 'class-validator';
 
-export function IsObjectId(validationOptions?: ValidationOptions) {
+export function IsNonce(validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {
     registerDecorator({
       name: 'IsNonce',

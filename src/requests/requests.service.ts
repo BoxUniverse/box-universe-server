@@ -1,9 +1,7 @@
-import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
-import { ProfilesService } from '@profiles/profiles.service';
-import { Queue } from 'bull';
+import { ProfilesService } from '@src/profiles';
+import { Request } from '@src/requests';
 import { RequestsRepository } from './requests.repository';
-import { Request } from './requests.schema';
 
 @Injectable()
 export class RequestsService {

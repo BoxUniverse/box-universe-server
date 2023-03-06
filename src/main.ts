@@ -1,31 +1,40 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import * as compression from 'compression';
-// import * as csurf from 'csurf';
-import * as bodyParser from 'body-parser';
-import helmet from 'helmet';
-import * as cookieParser from 'cookie-parser';
-import * as session from 'express-session';
-import * as os from 'os';
+import { AppModule } from './app.module';
 import { MongoExceptionFilter } from '@filters/mongo.filter';
 import { config } from 'aws-sdk';
+import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
 import { graphqlUploadExpress } from 'graphql-upload';
-import { RedisIoAdapter } from './common/adapters/redis.adapter';
+import helmet from 'helmet';
+import * as os from 'os';
+import { RedisIoAdapter } from '@common/adapters';
+import { EventEmitter } from 'events';
 
 declare const module: any;
+
 async function bootstrap() {
+  //
+
   const cpus = os.cpus().length;
   process.env.UV_THREADPOOL_SIZE = cpus.toString();
+  const app = await NestFactory.create(AppModule, {
+    snapshot: true,
+  });
+  EventEmitter.setMaxListeners(0);
 
-  const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: '*',
     credentials: true,
   });
+  process.setMaxListeners(200);
   const redisIoAdapter = new RedisIoAdapter(app);
   await redisIoAdapter.connectToRedis();
+
   app.useWebSocketAdapter(redisIoAdapter);
+
   config.update({
     accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
@@ -41,6 +50,10 @@ async function bootstrap() {
     }),
   );
   bodyParser.urlencoded({ extended: false });
+  app.use(bodyParser.json({ limit: '200mb' }));
+  app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
+
+  app.use(bodyParser.text({ limit: '200mb' }));
   app.use(cookieParser());
   app.use(
     session({
@@ -50,7 +63,7 @@ async function bootstrap() {
     }),
   );
 
-  app.use(graphqlUploadExpress({ maxFileSize: 2 * 1000 * 1000, maxFiles: 10 }));
+  app.use(graphqlUploadExpress({ maxFileSize: 2000000, maxFiles: 20 }));
   // app.use(csurf({ cookie: true }));
   await app.listen(process.env.PORT);
   if (module.hot) {
@@ -58,4 +71,5 @@ async function bootstrap() {
     module.hot.dispose(() => app.close());
   }
 }
+
 bootstrap();

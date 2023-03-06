@@ -1,5 +1,5 @@
 import { ArgsType, Field, InputType } from '@nestjs/graphql';
-import { IsString, Length, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 @ArgsType()
 @InputType()

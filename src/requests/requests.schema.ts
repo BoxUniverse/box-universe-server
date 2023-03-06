@@ -1,7 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { DynamicProfile, Profile } from '@src/profiles';
 import mongoose, { ObjectId } from 'mongoose';
-import { Profile } from '@profiles/profiles.schema';
 
 @Schema({
   timestamps: {
@@ -10,17 +10,17 @@ import { Profile } from '@profiles/profiles.schema';
   },
 })
 @ObjectType()
-export class Request {
+export class Request<RQ extends DynamicProfile = string, RC extends DynamicProfile = string> {
   @Field(() => ID, { nullable: false })
   _id?: ObjectId;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   @Field(() => Profile)
-  userRequest: string;
+  userRequest: RQ;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   @Field(() => Profile)
-  userReceive: string;
+  userReceive: RC;
 
   @Prop({ required: true, default: false })
   @Field(() => Boolean)

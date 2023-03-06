@@ -1,12 +1,8 @@
-import { UserInput } from './dto/user.input';
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from './users.schema';
-import { DeleteResult, ObjectId, UpdateResult } from 'mongodb';
-import { CreateInput } from '@users/dto/create.input';
-import { OAuthInput } from '@users/dto/oauth.input';
-import { UserOAuth } from './types/UserOAuth';
+import { CreateInput, OAuthInput, User, UserDocument, UserInput, UserOAuth } from '@src/users';
+import { DeleteResult, ObjectId } from 'mongodb';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UsersRepository {
@@ -22,7 +18,7 @@ export class UsersRepository {
 
   async createUser(createInput: CreateInput): Promise<User> {
     const { username, password, email, provider } = createInput;
-    const document = this.userModel.create({
+    return this.userModel.create({
       username,
       password,
       email,
@@ -32,15 +28,14 @@ export class UsersRepository {
         },
       ],
     });
-    return document;
   }
 
   async deleteUser(userInput: UserInput): Promise<User> {
     return this.userModel.remove(userInput);
   }
 
-  async softDeleteUser(userInput: UserInput): Promise<UpdateResult> {
-    return this.userModel.updateOne(userInput, {
+  async softDeleteUser(userInput: UserInput): Promise<User> {
+    return this.userModel.findOneAndUpdate(userInput, {
       deletedAt: Date.now(),
     });
   }
@@ -49,8 +44,8 @@ export class UsersRepository {
     return this.userModel.deleteMany({});
   }
 
-  async updateRefreshToken(userId: string | ObjectId, refreshToken: string): Promise<UpdateResult> {
-    return this.userModel.updateOne({ _id: userId }, { refreshToken });
+  async updateRefreshToken(userId: string | ObjectId, refreshToken: string): Promise<User> {
+    return this.userModel.findOneAndUpdate({ _id: userId }, { refreshToken });
   }
 
   async OAuth(OAuthInput: OAuthInput): Promise<User | UserOAuth> {

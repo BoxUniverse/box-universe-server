@@ -1,11 +1,9 @@
 import { Process, Processor } from '@nestjs/bull';
-import { Job } from 'bull';
 import { S3 } from 'aws-sdk';
+import { Job } from 'bull';
 
 @Processor('upload-queue')
 export class S3Processor {
-  constructor() {}
-
   @Process('uploadFile')
   async handleUploadFile(job: Job) {
     const s3 = new S3();

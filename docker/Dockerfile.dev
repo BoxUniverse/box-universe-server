@@ -1,7 +1,7 @@
-FROM node:16.18-alpine
+FROM node:16.18
 WORKDIR /server
 COPY ./server/package.json .
 RUN yarn install
 COPY ./server .
-EXPOSE 3000
+EXPOSE 3000 8000
 CMD [ "yarn", "start:dev" ]

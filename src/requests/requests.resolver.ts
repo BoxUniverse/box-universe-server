@@ -1,12 +1,12 @@
-import { Authorization } from '@decorators/Authorization.decorator';
-import { AuthGuard } from '@guards/auth.guard';
+import { Authorization } from '@common/decorators';
+import { AuthGuard } from '@common/guards';
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { Current } from '@users/types/UserOAuth';
-import RequestInput from './dto/requests.input';
-import { Request } from './requests.schema';
-import { RequestsService } from './requests.service';
 import { PubSub } from 'graphql-subscriptions';
+import RequestInput from './dto/requests.input';
+import { Request } from "./requests.schema";
+import { RequestsService } from './requests.service';
 
 const pubSub = new PubSub();
 @Resolver()
@@ -26,7 +26,7 @@ export class RequestsResolver {
     user: Current,
   ): Promise<Request[]> {
     if (!info?.userReceive) info.userReceive = user._id.toString();
-    console.log(user);
+    
 
     return this.requestsService.getRequests(info);
   }

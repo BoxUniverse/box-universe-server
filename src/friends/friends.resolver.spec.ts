@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FriendsResolver } from './friends.resolver';
+import { FriendsResolver } from '@src/friends';
 
 describe('FriendsResolver', () => {
   let resolver: FriendsResolver;

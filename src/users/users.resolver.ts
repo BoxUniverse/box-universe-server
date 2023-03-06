@@ -1,22 +1,17 @@
-import { UserInput } from './dto/user.input';
-import { RequireAtLeast } from '@pipes/RequireAtLeast.pipe';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { User } from './users.schema';
-import { UsersService } from '@users/users.service';
+import { Authorization } from '@common/decorators';
+import { MongooseExceptionFilter } from '@common/filters';
+import { DeleteResult } from '@common/graphql';
+import { AuthGuard } from '@common/guards';
+import { RequireAtLeast } from '@common/pipes';
 import { UseFilters, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@guards/auth.guard';
-import { UpdateResult } from 'mongodb';
-import { DeleteResult } from '@graphql/types/DeleteResult';
-import { S3Service } from '@s3/s3.service';
-import { CreateInput } from '@users/dto/create.input';
-import { MongooseExceptionFilter } from '@filters/mongoose.filter';
-import { Authorization } from '@decorators/Authorization.decorator';
-import { Current } from '@users/types/UserOAuth';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { S3Service } from '@src/s3';
+import { CreateInput, Current, User, UserInput, UsersService } from '@src/users';
 
 @Resolver(() => User)
 @UseGuards(AuthGuard)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService, private readonly s3Service: S3Service) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Query(() => Current, {
     name: 'me',
@@ -54,9 +49,7 @@ export class UsersResolver {
     name: 'softDeleteUser',
     nullable: true,
   })
-  async softDeleteUser(
-    @Args('userInput', new RequireAtLeast()) userInput: UserInput,
-  ): Promise<UpdateResult> {
+  async softDeleteUser(@Args('userInput', new RequireAtLeast()) userInput: UserInput) {
     return this.usersService.softDeleteUser(userInput);
   }
 

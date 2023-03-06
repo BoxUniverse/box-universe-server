@@ -1,7 +1,6 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
-import { ProfilesRepository } from '@profiles/profiles.repository';
-import { S3Service } from '@s3/s3.service';
+import { ProfilesRepository } from '@src/profiles';
 
 @Processor('profile-queue')
 export class ProfilesProcessor {
@@ -10,7 +9,7 @@ export class ProfilesProcessor {
   @Process('updateAvatar')
   async handleUpdateAvatar(job: Job) {
     const { url, id } = job.data;
-    this.profilesRepository.updateAvatar(url, id);
+    return this.profilesRepository.updateAvatar(url, id);
   }
 
   @Process('addFriend')

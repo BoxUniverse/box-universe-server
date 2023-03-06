@@ -1,19 +1,17 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
-export type FriendDocument = Friend & mongoose.Document;
+export type FriendDocument = FriendProfile & mongoose.Document;
 
 @Schema()
 @ObjectType()
-export class Friend {
+export class FriendProfile {
   @Prop()
-  @Field(() => String)
+  @Field(() => String, {
+    nullable: true,
+  })
   friendId: string;
-
-  @Prop({ default: false })
-  @Field(() => Boolean)
-  isBlock: boolean;
 }
 
-export const FriendSchema = SchemaFactory.createForClass(Friend);
+export const FriendSchema = SchemaFactory.createForClass(FriendProfile);

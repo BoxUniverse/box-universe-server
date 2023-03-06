@@ -1,20 +1,16 @@
-import { Query, Resolver, Args, Mutation } from '@nestjs/graphql';
-import { ProfilesService } from '@profiles/profiles.service';
-import { Profile } from '@profiles/profiles.schema';
-import ProfileInput from '@profiles/dto/profile.input';
-import { File } from '@graphql/types/File';
-import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { S3Service } from '@s3/s3.service';
-import { GraphQLException } from '@exceptions/graphql.exception';
-import { CACHE_MANAGER, HttpStatus, Inject, NotFoundException, UseGuards } from '@nestjs/common';
+import { GraphQLException } from '@common/exceptions';
+import { AuthGuard } from '@common/guards';
+import { File } from '@common/graphql';
 import { InjectQueue } from '@nestjs/bull';
+import { CACHE_MANAGER, HttpStatus, Inject, NotFoundException, UseGuards } from '@nestjs/common';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { S3Service } from '@src/s3';
+import { Profile, ProfileInput, ProfilesService } from '@src/profiles';
 import { Queue } from 'bull';
 import { Cache } from 'cache-manager';
-import { AuthGuard } from '@guards/auth.guard';
-import { Authorization } from '@decorators/Authorization.decorator';
-import { Current } from '@users/types/UserOAuth';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
-@Resolver()
+@Resolver(Profile)
 @UseGuards(AuthGuard)
 export class ProfilesResolver {
   constructor(
@@ -26,25 +22,21 @@ export class ProfilesResolver {
 
   @Query(() => [Profile])
   async getEntireProfile(): Promise<Profile[]> {
-    this.cacheManager.get<string>('list.profiles', (error, result) => {
-      if (!error) return JSON.parse(result);
-    });
+    const result = await this.cacheManager.get<string>('list.profiles');
+    if (result) return JSON.parse(result);
 
     return this.profilesService.searchUser({ keyword: '' });
   }
+
   @Query(() => [Profile])
   async searchUser(
     @Args({ name: 'searchInput', type: () => ProfileInput.Search })
     searchInput: ProfileInput.Search,
   ): Promise<Profile[]> {
-    this.cacheManager.get<string>('list.profiles', (error, result) => {
-      if (!error) return JSON.parse(result);
-    });
+    const result = await this.cacheManager.get<string>('list.profiles');
+    if (result) return JSON.parse(result);
     const list = await this.profilesService.searchUser(searchInput);
-
-    this.cacheManager.set('list-profile', JSON.stringify(list), {
-      ttl: 60,
-    });
+    await this.cacheManager.set('list-profile', JSON.stringify(list), 60);
     return list;
   }
 
@@ -53,6 +45,8 @@ export class ProfilesResolver {
     @Args({ name: 'profileInput', type: () => ProfileInput.Obtain }) profileInput: Partial<Profile>,
   ): Promise<Profile> {
     return this.profilesService.getProfile(profileInput);
+
+    //
   }
 
   @Mutation(() => File, {
@@ -64,7 +58,6 @@ export class ProfilesResolver {
     @Args({ name: 'id', type: () => String }) id: string,
   ): Promise<File> {
     const { mimetype, filename, encoding } = file;
-    console.log(67, 'profiles.resolver.ts', file);
 
     if (mimetype.startsWith('image')) {
       const url = await this.s3Service.uploadImage(file);
@@ -84,6 +77,7 @@ export class ProfilesResolver {
       );
     }
   }
+
   @Mutation(() => Number, {
     name: 'unfriend',
     nullable: true,
@@ -93,4 +87,15 @@ export class ProfilesResolver {
   ): Promise<number> {
     return this.profilesService.unFriend(friend.userId, friend.friendId);
   }
+
+  // @ResolveField(() => [UnionFriend], {
+  //   name: 'friends',
+  //   nullable: true,
+  // })
+  // _friends(@Parent() profile: Profile) {
+  //   //
+  //   //
+  //   // return FriendProfile;
+  //   // return profile.friends;
+  // }
 }

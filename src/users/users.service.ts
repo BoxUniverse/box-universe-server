@@ -1,12 +1,8 @@
-import { User } from '@users/users.schema';
-import { UserInput } from './dto/user.input';
-import { UsersRepository } from './users.repository';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { DeleteResult, ObjectId, UpdateResult } from 'mongodb';
-import { CreateInput } from '@users/dto/create.input';
-import { OAuthInput } from '@users/dto/oauth.input';
-import { ProfilesRepository } from '@src/profiles/profiles.repository';
-import { UserOAuth } from './types/UserOAuth';
+
+import { ProfilesRepository } from '@src/profiles';
+import { CreateInput, OAuthInput, User, UserInput, UserOAuth, UsersRepository } from '@src/users';
+import { DeleteResult, ObjectId } from 'mongodb';
 
 @Injectable()
 export class UsersService {
@@ -40,7 +36,7 @@ export class UsersService {
     return this.usersRepository.deleteUser(userInput);
   }
 
-  softDeleteUser(userInput: UserInput): Promise<UpdateResult> {
+  softDeleteUser(userInput: UserInput) {
     return this.usersRepository.softDeleteUser(userInput);
   }
 
@@ -48,7 +44,7 @@ export class UsersService {
     return this.usersRepository.deleteEntireUser();
   }
 
-  updateRefreshToken(userId: string | ObjectId, refreshToken: string): Promise<UpdateResult> {
+  updateRefreshToken(userId: string | ObjectId, refreshToken: string) {
     return this.usersRepository.updateRefreshToken(userId, refreshToken);
   }
 

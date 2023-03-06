@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "strict": false,
     "paths": {
+      "@common/*": ["./src/common/*"],
       "@pipes/*": ["./src/common/pipes/*"],
       "@validators/*": ["./src/common/validators/*"],
       "@filters/*": ["./src/common/filters/*"],
@@ -33,9 +34,9 @@
       "@core/*": ["./src/core/*"],
       "@profiles/*": ["./src/profiles/*"],
 
-      "@src/*": ["./src/*"]
+      "@src/*": ["./src/*"],
     },
-    "types": []
+    "types": ["jest", "node"]
   },
-  "exclude": ["node_modules/*", ".eslintrc.js", "node_modules"]
+  "exclude": ["node_modules/*", ".eslintrc.js", "node_modules", "./dist/*"]
 }

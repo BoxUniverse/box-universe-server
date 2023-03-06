@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { RequestDocument } from '@src/requests';
 import { Model } from 'mongoose';
-import { Request, RequestDocument } from './requests.schema';
-import { first } from 'lodash';
+import { Request } from "./requests.schema";
 
 @Injectable()
 export class RequestsRepository {
