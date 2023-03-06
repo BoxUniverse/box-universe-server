@@ -14,10 +14,7 @@ import { PostsService } from '@src/posts';
 @WebSocketGateway(3005, { cors: true, maxHttpBufferSize: 1e8 })
 @Injectable()
 export class PostsGateway {
-  constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    private readonly postsService: PostsService,
-  ) {}
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
   @WebSocketServer() server: Server;
 
   @SubscribeMessage('post.ADD')

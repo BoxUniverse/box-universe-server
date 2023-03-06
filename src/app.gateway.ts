@@ -63,9 +63,6 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     const userId = query?.session;
 
-    const result = await this.cacheManager.del(userId);
     await this.cacheManager.del(userId);
-
-    const listSocketId = await this.cacheManager.get<Array<string>>(userId);
   }
 }

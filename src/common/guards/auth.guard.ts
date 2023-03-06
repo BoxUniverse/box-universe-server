@@ -16,9 +16,7 @@ export class AuthGuard implements CanActivate {
     const token = (headers?.authorization || headers?.Authorization)?.replace('Bearer ', '');
 
     try {
-      const result = await decode({ token, secret });
-
-      ctx.req.user = result;
+      ctx.req.user = await decode({ token, secret });
 
       return true;
     } catch (error) {

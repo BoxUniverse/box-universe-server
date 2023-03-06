@@ -1,6 +1,6 @@
 import { ArgsType, Field, InputType } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
-import { ProviderInput } from '../users.type';
+import { ProviderInput } from '@src/users';
 
 @ArgsType()
 @InputType()

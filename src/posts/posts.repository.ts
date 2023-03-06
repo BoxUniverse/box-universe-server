@@ -2,8 +2,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { PostDocument, PostInput, Post } from '@src/posts';
 import { Profile } from '@src/profiles';
 import { isEmpty } from 'lodash';
-import { ObjectId, UpdateResult } from 'mongodb';
-import { Model, PipelineStage } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { Aggregate, Model, PipelineStage } from 'mongoose';
 
 export class PostsRepository {
   constructor(@InjectModel(Post.name) private readonly postModel: Model<PostDocument>) {}

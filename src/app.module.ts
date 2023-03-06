@@ -21,8 +21,6 @@ import { PubSub } from 'graphql-subscriptions';
 import { join } from 'path';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 
-const pubSub = new PubSub();
-
 @Module({
   imports: [
     DevtoolsModule.register({

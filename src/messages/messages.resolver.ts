@@ -53,7 +53,7 @@ export class MessagesResolver {
     const resultFiles = await Promise.all(files);
     const aPromises = [];
     for (const file of resultFiles) {
-      aPromises.push(this.s3Service.uploadMultipleImage(file));
+      aPromises.push(this.s3Service.uploadImage(file));
     }
     return this.messagesService.sendFiles(
       await Promise.all(aPromises),

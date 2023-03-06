@@ -26,7 +26,7 @@ export class MessagesGateway {
     @MessageBody() payload: any,
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    const { sender, conversation, message } = payload;
+    const { sender, conversation } = payload;
     if (!conversation.members) return;
 
     const { members } = conversation;
@@ -51,11 +51,10 @@ export class MessagesGateway {
     @MessageBody() payload: any,
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    
     const validExtFilePattern =
       /^(((image)\/(png|jpg|jpeg|webp))|((text)\/(plain))|((application)\/(pdf)))$/g;
 
-    const { sender, conversation, message } = payload;
+    const { sender, conversation } = payload;
     if (!conversation.members) return;
 
     const { members } = conversation;
@@ -84,7 +83,7 @@ export class MessagesGateway {
         }
       });
 
-      // 
+      //
       const newPayload = {
         ...payload,
         files: [...files],
@@ -165,9 +164,7 @@ export class MessagesGateway {
   @SubscribeMessage('messages.STOP_CALL')
   async handleStopCall(@MessageBody() payload, @ConnectedSocket() client) {
     const { userAction, caller, receiver } = payload;
-    
 
-    
     let listSocketId = [];
 
     if (userAction.id === receiver.id) {

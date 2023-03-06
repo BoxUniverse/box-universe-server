@@ -1,5 +1,5 @@
 import { Field, IntersectionType, ObjectType } from '@nestjs/graphql';
-import { User } from '../users.schema';
+import { User } from '@src/users';
 
 export type UserOAuth = User & { provider: string; id: string };
 

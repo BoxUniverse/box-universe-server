@@ -11,7 +11,7 @@ import { CreateInput, Current, User, UserInput, UsersService } from '@src/users'
 @Resolver(() => User)
 @UseGuards(AuthGuard)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService, private readonly s3Service: S3Service) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Query(() => Current, {
     name: 'me',

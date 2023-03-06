@@ -14,11 +14,6 @@ type User {
   updatedAt: String!
 }
 
-type Provider {
-  id: String
-  type: String!
-}
-
 type Current {
   _id: ID!
   username: String
@@ -34,6 +29,11 @@ type Current {
 
   """id"""
   id: String!
+}
+
+type Provider {
+  id: String
+  type: String!
 }
 
 type Profile {

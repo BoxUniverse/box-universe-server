@@ -2,7 +2,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
 import { ProfilesRepository } from '@src/profiles';
 import { CreateInput, OAuthInput, User, UserInput, UserOAuth, UsersRepository } from '@src/users';
-import { DeleteResult, ObjectId, UpdateResult } from 'mongodb';
+import { DeleteResult, ObjectId } from 'mongodb';
 
 @Injectable()
 export class UsersService {
