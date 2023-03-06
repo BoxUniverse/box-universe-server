@@ -1,5 +1,4 @@
-import { AuthGuard } from '@guards/auth.guard';
-import { CACHE_MANAGER, Inject, Injectable, CacheTTL, UseGuards } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -7,10 +6,9 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { RelationshipsService } from '@src/relationships/relationships.service';
 import { Cache } from 'cache-manager';
 import { Server, Socket } from 'socket.io';
-import { ProfilesService } from './profiles.service';
+import { ProfilesService } from '@src/profiles';
 
 @WebSocketGateway(3005, { cors: true })
 @Injectable()
@@ -31,12 +29,6 @@ export class ProfilesGateway {
     const listSocketId = await this.cacheManager.get<Array<string>>(userReceive);
 
     if (userRequest && userReceive) {
-      // this.relationshipsService.addRelationship({
-      //   userId: userRequest,
-      //   friendId: userReceive,
-      // });
-      console.log('profiles ne');
-
       if (listSocketId) {
         const profile = await this.profilesService.getProfile({
           id: userRequest,

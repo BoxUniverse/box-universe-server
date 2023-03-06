@@ -1,7 +1,7 @@
-import { Args, ArgsType, Field, InputType, PartialType } from '@nestjs/graphql';
+import { ArgsType, Field, InputType } from '@nestjs/graphql';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
-namespace ProfileInput {
+export namespace ProfileInput {
   @ArgsType()
   @InputType()
   export class Create {
@@ -50,5 +50,3 @@ namespace ProfileInput {
     friendId: string;
   }
 }
-
-export default ProfileInput;

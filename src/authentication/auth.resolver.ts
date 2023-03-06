@@ -1,12 +1,9 @@
+import { MongooseExceptionFilter } from '@common/filters';
 import { BadRequestException, UseFilters } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { AuthService } from './auth.service';
-import { User } from '@users/users.schema';
-import { UsersService } from '@users/users.service';
-import { MongooseExceptionFilter } from '@filters/mongoose.filter';
-import { CreateInput } from '@users/dto/create.input';
-import { OAuthInput } from '@users/dto/oauth.input';
+import { CreateInput, OAuthInput, User, UsersService } from '@src/users';
 import * as crypto from 'crypto';
+import { AuthService } from './auth.service';
 import { LoginInput } from './dto/loginInput.input';
 
 @Resolver()
@@ -22,7 +19,6 @@ export class AuthResolver {
     const { username, password, nonce } = loginInput;
     const data = `${username}.${password}.${process.env.SECRET}`;
     const hash = crypto.createHash('md5').update(data).digest('hex');
-
     if (hash === nonce) return this.authService.validateUser(username, password);
     throw new BadRequestException('Request nonce is invalid');
   }

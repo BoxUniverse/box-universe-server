@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ProfilesRepository } from '@profiles/profiles.repository';
-import { FriendsProfile } from './types';
+import { ProfilesRepository } from '@src/profiles';
+import { FriendsProfile } from '@src/friends';
 
 @Injectable()
 export class FriendsService {

@@ -1,11 +1,9 @@
-import { InjectModel } from '@nestjs/mongoose';
-import { Profile, ProfileDocument } from '@profiles/profiles.schema';
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import ProfileInput from '@profiles/dto/profile.input';
-import { FriendsProfile } from '@src/friends/types';
+import { InjectModel } from '@nestjs/mongoose';
+import { FriendsProfile } from '@src/friends';
+import { ProfileDocument, ProfileInput, Profile } from '@src/profiles';
 import { isEmpty } from 'lodash';
-
+import { Model } from 'mongoose';
 @Injectable()
 export class ProfilesRepository {
   constructor(@InjectModel(Profile.name) private readonly profileModel: Model<ProfileDocument>) {}
@@ -100,7 +98,7 @@ export class ProfilesRepository {
       return model.updateOne(
         { id: userId },
         {
-          $push: { friends: { friendId, isBlock: false } },
+          $push: { friends: { friendId } },
         },
       );
     })();
@@ -108,7 +106,7 @@ export class ProfilesRepository {
       return model.updateOne(
         { id: friendId },
         {
-          $push: { friends: { friendId: userId, isBlock: false } },
+          $push: { friends: { friendId: userId } },
         },
       );
     })();

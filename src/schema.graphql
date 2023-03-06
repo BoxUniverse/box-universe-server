@@ -2,11 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Provider {
-  id: String
-  type: String!
-}
-
 type User {
   _id: ID!
   username: String
@@ -19,18 +14,9 @@ type User {
   updatedAt: String!
 }
 
-type Profile {
-  id: String!
-  name: String!
-  email: String!
-  avatar: String!
-  provider: String!
-  friends: [Profile!]!
-}
-
-type DeleteResult {
-  acknowledged: Boolean!
-  deletedCount: Float!
+type Provider {
+  id: String
+  type: String!
 }
 
 type Current {
@@ -39,7 +25,7 @@ type Current {
   password: String
   email: String!
   refreshToken: String
-  providers: Provider!
+  providers: [Provider!]!
   deletedAt: String!
   createdAt: String!
   updatedAt: String!
@@ -50,6 +36,65 @@ type Current {
   id: String!
 }
 
+type Profile {
+  id: String!
+  name: String!
+  email: String!
+  avatar: String!
+  provider: String
+  friends: [UnionFriend!]
+}
+
+union UnionFriend = Profile | FriendProfile
+
+type FriendProfile {
+  friendId: String
+}
+
+type Conversation {
+  _id: ID!
+  name: String
+  members: [Profile!]!
+}
+
+type ListFriendNotInConversation {
+  result: [Profile!]!
+}
+
+type FileInfo {
+  url: String!
+  type: String!
+}
+
+type Message {
+  _id: ID
+  sender: Profile!
+  conversation: ID!
+  message: String
+  files: [FileInfo!]
+  type: String!
+  createdAt: String!
+}
+
+type MessageOmit {
+  _id: ID
+  sender: Profile!
+  message: String
+  files: [FileInfo!]
+  type: String!
+  createdAt: String!
+}
+
+type MessagesConversation {
+  _id: ID!
+  messages: [MessageOmit!]!
+}
+
+type DeleteResult {
+  acknowledged: Boolean!
+  deletedCount: Float!
+}
+
 type File {
   filename: String
   mimetype: String
@@ -57,10 +102,40 @@ type File {
   url: String
 }
 
-type Relationship {
-  userId: String!
-  friendId: String!
-  isBlock: Boolean!
+type Post {
+  _id: ID
+  content: String
+  profile: Profile!
+  countLike: Float!
+  countComment: Float!
+  createdAt: String!
+  updatedAt: String!
+  deletedAt: String!
+  isLiked: Boolean!
+  likes: [Profile!]!
+}
+
+type Comment {
+  _id: ID!
+  profile: Profile!
+  post: Post!
+  text: String!
+  deletedAt: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type FriendsProfile {
+  friends: [UnionFriend!]
+}
+
+type Like {
+  _id: ID!
+  profile: Profile!
+  post: Post!
+  deletedAt: String!
+  createdAt: String!
+  updatedAt: String!
 }
 
 type Request {
@@ -72,10 +147,6 @@ type Request {
   isPending: Boolean!
 }
 
-type FriendsProfile {
-  friends: [Profile!]!
-}
-
 type Query {
   me: Current
   getUser(userInput: UserInput!): User
@@ -83,10 +154,15 @@ type Query {
   getEntireProfile: [Profile!]!
   searchUser(searchInput: Search!): [Profile!]!
   getProfile(profileInput: Obtain!): Profile!
-  retrieveRelationships(relationship: Info!): [Relationship!]
-  retrieveEntireRelationships(status: Status!): [Relationship!]
-  getRequests(request: RetrieveRequest!): [Request!]!
+  getConversationByProfileId(profileId: String!): [Conversation!]
+  getConversationById(conversationId: String!): Conversation
+  getListFriendNotInConversation(conversationId: String!): ListFriendNotInConversation
+  getConversationByFriend(profileId: String!, friendId: String!): Conversation
+  getMessagesByConversationId(payload: PaginationMessages!): MessagesConversation
   getEntireFriends: FriendsProfile
+  getRequests(request: RetrieveRequest!): [Request!]!
+  getPosts(payload: GetPosts = null): [Post!]
+  getComments(post: String!): [Comment!]
 }
 
 input UserInput {
@@ -105,13 +181,9 @@ input Obtain {
   id: String!
 }
 
-input Info {
-  friendId: ID!
-}
-
-input Status {
-  isPending: Boolean!
-  isBlock: Boolean!
+input PaginationMessages {
+  conversationId: String!
+  startValue: ID
 }
 
 input RetrieveRequest {
@@ -122,6 +194,10 @@ input RetrieveRequest {
   isAccept: Boolean!
 }
 
+input GetPosts {
+  _id: String = null
+}
+
 type Mutation {
   deleteUser(userInput: UserInput!): User
   softDeleteUser(userInput: UserInput!): User
@@ -129,16 +205,23 @@ type Mutation {
   createUser(createInput: CreateInput!): User
   uploadAvatar(file: Upload!, id: String!): File
   unfriend(friend: Friend!): Float
-  addRelationship(relationship: Create!): Relationship!
-  acceptRelationship(relationship: Info!): Relationship
-  blockRelationship(relationship: Info!): Relationship
-  unblockRelationship(relationship: Info!): Relationship
+  createConversation(infoConversation: CreateConversation!): Boolean
+  addMemberConversation(conversationId: String!, profileIds: [String!]!): Conversation
+  changeNameConversation(payload: ChangeNameConversation!): Conversation
+  sendMessage(payload: Send!): Message
+  sendFiles(files: [Upload!]!, payload: SendFiles!): Message
   login(loginInput: LoginInput!): User
   OAuth(OAuthInput: OAuthInput!): User!
   register(createInput: CreateInput!): User!
   addRequest(request: CreateRequest!): Request!
   acceptRequest(request: InfoRequest!): Request
   rejectRequest(request: InfoRequest!): Request
+  createPost(post: CreatePost!): Post!
+  deletePost(post: DeletePost!): Post
+  commentPost(post: String!, text: String!): Comment!
+  deleteComment(id: ID!): Comment!
+  likePost(post: String!): Like
+  unlikePost(post: String!): Float!
 }
 
 input CreateInput {
@@ -161,8 +244,25 @@ input Friend {
   friendId: String!
 }
 
-input Create {
-  friendId: ID!
+input CreateConversation {
+  members: [String!]!
+  name: String!
+}
+
+input ChangeNameConversation {
+  _id: ID!
+  name: String
+}
+
+input Send {
+  message: String!
+  conversationId: ID!
+  now: Float!
+}
+
+input SendFiles {
+  conversationId: ID!
+  now: Float!
 }
 
 input LoginInput {
@@ -189,6 +289,26 @@ input InfoRequest {
   userReceive: ID
 }
 
+input CreatePost {
+  """content of post"""
+  content: String
+
+  """count like of post"""
+  countLike: Float
+}
+
+input DeletePost {
+  _id: ID
+}
+
 type Subscription {
+  memberAdded: Conversation
   requestAdded: [Request!]!
+  postAdded(publisher: PublisherSubscriptions): Post!
+  commentAdded(post: String!): Post
+  newLike(post: String!): Post!
+}
+
+input PublisherSubscriptions {
+  id: ID!
 }

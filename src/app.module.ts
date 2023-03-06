@@ -1,26 +1,33 @@
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { BullModule } from '@nestjs/bull';
 import { CacheModule, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './authentication/auth.module';
-import { S3Service } from './s3/s3.service';
-import { S3Module } from './s3/s3.module';
-import { UsersService } from '@users/users.service';
-import { ProfilesModule } from './profiles/profiles.module';
-import { BullModule } from '@nestjs/bull';
-import { RelationshipsModule } from './relationships/relationships.module';
-import { EventsModule } from './events/events.module';
+import { AuthModule } from '@src/authentication';
+import { CommentsModule } from '@src/comments';
+import { ConversationsModule } from '@src/conversations';
+import { FriendsModule } from '@src/friends';
+import { LikesModule } from '@src/likes';
+import { MessagesModule } from '@src/messages';
+import { NotificationsModule } from '@src/notifications';
+import { PostsModule } from '@src/posts';
+import { ProfilesModule } from '@src/profiles';
+import { PubSubModule } from '@src/pubsub.module';
+import { RequestsModule } from '@src/requests';
+import { S3Module } from '@src/s3';
+import { UsersModule } from '@src/users';
 import * as redisStore from 'cache-manager-redis-store';
-import { AppGateway } from './app.gateway';
-import { RequestsModule } from './requests/requests.module';
-import { FriendsModule } from './friends/friends.module';
-import { NotificationsModule } from './notifications/notifications.module';
-import { ConversationsModule } from './conversations/conversations.module';
+import { PubSub } from 'graphql-subscriptions';
+import { join } from 'path';
+import { DevtoolsModule } from '@nestjs/devtools-integration';
+
+const pubSub = new PubSub();
 
 @Module({
   imports: [
+    DevtoolsModule.register({
+      http: process.env.NODE_ENV !== 'production',
+    }),
     CacheModule.register({ isGlobal: true, store: redisStore, host: 'redis', port: 6379 }),
     BullModule.forRoot({
       redis: {
@@ -34,32 +41,39 @@ import { ConversationsModule } from './conversations/conversations.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
       playground: true,
       csrfPrevention: false,
-
       installSubscriptionHandlers: true,
       subscriptions: {
         'graphql-ws': {
-          path: '/subscription',
+          path: '/graphql',
+        },
+        'subscriptions-transport-ws': {
+          path: '/graphql',
+          onConnect: (headers) => {
+            return { req: { headers: headers } };
+          },
         },
       },
+
       cors: {
         origin: '*',
         credentials: true,
       },
-      debug: process.env.NODE_ENV !== 'production',
-      path: '/',
-      context: ({ req, res }) => ({ req, res }),
+      debug: process.env.NODE_ENV === 'development',
+      context: ({ req, res, connection }) => ({ req, res, connection }),
     }),
-    UsersModule,
-    AuthModule,
+    PubSubModule,
     S3Module,
-    ProfilesModule,
-    // RelationshipsModule,
-    EventsModule,
-    RequestsModule,
+    UsersModule,
     FriendsModule,
+    ProfilesModule,
+    AuthModule,
+    RequestsModule,
     NotificationsModule,
     ConversationsModule,
+    MessagesModule,
+    PostsModule,
+    CommentsModule,
+    LikesModule,
   ],
-  providers: [S3Service, UsersService, AppGateway],
 })
 export class AppModule {}

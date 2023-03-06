@@ -1,0 +1,1103 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>server documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">server documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li >MessagesGateway</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/messages/messages.gateway.ts</code>
+        </p>
+
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#server" >server</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleAcceptCall" >handleAcceptCall</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleRejectCall" >handleRejectCall</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleSelfReject" >handleSelfReject</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleSendFiles" >handleSendFiles</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleSendMessage" >handleSendMessage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleStartCall" >handleStartCall</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleStopCall" >handleStopCall</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(cacheManager: Cache, conversationsService: <a href="../injectables/ConversationsService.html" target="_self">ConversationsService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/messages/messages.gateway.ts:17</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>cacheManager</td>
+                                                  
+                                                        <td>
+                                                                    <code>Cache</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>conversationsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConversationsService.html" target="_self" >ConversationsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleAcceptCall"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>handleAcceptCall</b></span>
+                        <a href="#handleAcceptCall"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleAcceptCall(payload, client)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@SubscribeMessage(&#x27;messages.ACCEPT_CALL&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="124"
+                            class="link-to-prism">src/messages/messages.gateway.ts:124</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>client</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleRejectCall"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>handleRejectCall</b></span>
+                        <a href="#handleRejectCall"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleRejectCall(payload, client)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@SubscribeMessage(&#x27;messages.REJECT_CALL&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="137"
+                            class="link-to-prism">src/messages/messages.gateway.ts:137</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>client</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleSelfReject"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>handleSelfReject</b></span>
+                        <a href="#handleSelfReject"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleSelfReject(payload, client)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@SubscribeMessage(&#x27;messages.SELF_REJECT&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="149"
+                            class="link-to-prism">src/messages/messages.gateway.ts:149</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>client</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleSendFiles"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>handleSendFiles</b></span>
+                        <a href="#handleSendFiles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleSendFiles(payload: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, client: Socket)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@SubscribeMessage(&#x27;messages.SEND_FILES&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">src/messages/messages.gateway.ts:50</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>client</td>
+                                    <td>
+                                            <code>Socket</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleSendMessage"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>handleSendMessage</b></span>
+                        <a href="#handleSendMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleSendMessage(payload: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, client: Socket)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@SubscribeMessage(&#x27;messages.SEND&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="25"
+                            class="link-to-prism">src/messages/messages.gateway.ts:25</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>client</td>
+                                    <td>
+                                            <code>Socket</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleStartCall"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>handleStartCall</b></span>
+                        <a href="#handleStartCall"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleStartCall(payload, client)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@SubscribeMessage(&#x27;messages.CALL&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="97"
+                            class="link-to-prism">src/messages/messages.gateway.ts:97</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>client</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleStopCall"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>handleStopCall</b></span>
+                        <a href="#handleStopCall"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleStopCall(payload, client)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@SubscribeMessage(&#x27;messages.STOP_CALL&#x27;)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="166"
+                            class="link-to-prism">src/messages/messages.gateway.ts:166</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>client</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="server"></a>
+                    <span class="name">
+                        <span ><b>server</b></span>
+                        <a href="#server"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Server</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @WebSocketServer()<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/messages/messages.gateway.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CACHE_MANAGER, Inject, Injectable } from &#x27;@nestjs/common&#x27;;
+import {
+  ConnectedSocket,
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from &#x27;@nestjs/websockets&#x27;;
+import { ConversationsService } from &#x27;@src/conversations&#x27;;
+import { Profile } from &#x27;@src/profiles&#x27;;
+import { Cache } from &#x27;cache-manager&#x27;;
+import { isEmpty } from &#x27;lodash&#x27;;
+import { Server, Socket } from &#x27;socket.io&#x27;;
+
+@WebSocketGateway(3005, { cors: true, maxHttpBufferSize: 1e8 })
+@Injectable()
+export class MessagesGateway {
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly conversationsService: ConversationsService,
+  ) {}
+  @WebSocketServer() server: Server;
+
+  @SubscribeMessage(&#x27;messages.SEND&#x27;)
+  async handleSendMessage(
+    @MessageBody() payload: any,
+    @ConnectedSocket() client: Socket,
+  ): Promise&lt;void&gt; {
+    const { sender, conversation, message } &#x3D; payload;
+    if (!conversation.members) return;
+
+    const { members } &#x3D; conversation;
+
+    const listSocketId &#x3D; [];
+    for (const member of members) {
+      const temp &#x3D; (await this.cacheManager.get&lt;string[]&gt;(member.id)) || [];
+      listSocketId.push(...temp);
+    }
+
+    let senderSocketIds &#x3D; await this.cacheManager.get&lt;string[]&gt;(sender.id);
+
+    senderSocketIds &#x3D; senderSocketIds.filter((socketId) &#x3D;&gt; socketId !&#x3D;&#x3D; client.id);
+
+    listSocketId.push(...senderSocketIds);
+    if (sender &amp;&amp; !isEmpty(listSocketId)) {
+      client.to(listSocketId).emit(&#x27;publish/messages.SEND&#x27;, payload);
+    }
+  }
+  @SubscribeMessage(&#x27;messages.SEND_FILES&#x27;)
+  async handleSendFiles(
+    @MessageBody() payload: any,
+    @ConnectedSocket() client: Socket,
+  ): Promise&lt;void&gt; {
+    
+    const validExtFilePattern &#x3D;
+      /^(((image)\/(png|jpg|jpeg|webp))|((text)\/(plain))|((application)\/(pdf)))$/g;
+
+    const { sender, conversation, message } &#x3D; payload;
+    if (!conversation.members) return;
+
+    const { members } &#x3D; conversation;
+
+    const listSocketId &#x3D; [];
+    for (const member of members) {
+      const temp &#x3D; (await this.cacheManager.get&lt;string[]&gt;(member.id)) || [];
+      listSocketId.push(...temp);
+    }
+
+    let senderSocketIds &#x3D; await this.cacheManager.get&lt;string[]&gt;(sender.id);
+
+    senderSocketIds &#x3D; senderSocketIds.filter((socketId) &#x3D;&gt; socketId !&#x3D;&#x3D; client.id);
+    listSocketId.push(...senderSocketIds);
+    if (sender &amp;&amp; !isEmpty(listSocketId)) {
+      const files &#x3D; payload.files.map((info) &#x3D;&gt; {
+        const type: string &#x3D; info.type;
+        if (!isEmpty(type.match(validExtFilePattern))) {
+          const buffer &#x3D; Buffer.from(info.file, &#x27;base64&#x27;);
+
+          const base64 &#x3D; buffer.toString(&#x27;base64&#x27;);
+          return {
+            file: info.file,
+            type: info.type,
+          };
+        }
+      });
+
+      // 
+      const newPayload &#x3D; {
+        ...payload,
+        files: [...files],
+      };
+
+      client.to(listSocketId).emit(&#x27;publish/messages.SEND_FILES&#x27;, newPayload);
+    }
+  }
+  @SubscribeMessage(&#x27;messages.CALL&#x27;)
+  async handleStartCall(@MessageBody() payload, @ConnectedSocket() client) {
+    const { caller, conversation, signalData } &#x3D; payload;
+    const result &#x3D; await this.conversationsService.getFriendInConversation(conversation, caller.id);
+    if (result) {
+      const members &#x3D; result.members as Profile[];
+      const listSocketId &#x3D; [];
+
+      // for (const member of members) {
+      const temp &#x3D; (await this.cacheManager.get&lt;string[]&gt;(members[0].id)) || [];
+      listSocketId.push(...temp);
+      // }
+      if (!isEmpty(listSocketId)) {
+        // client.emit(&#x27;call.success&#x27;, &#x27;success&#x27;);
+        client.to(listSocketId).emit(&#x27;messages.INCOMING_CALL&#x27;, {
+          caller,
+          conversation,
+          signalData,
+        });
+      } else {
+        // const socketCaller &#x3D; await this.cacheManager.get&lt;string[]&gt;(caller.id);
+
+        client.emit(&#x27;messages.USER_OFFLINE&#x27;, &#x27;USER_OFFLINE&#x27;);
+      }
+    }
+  }
+
+  @SubscribeMessage(&#x27;messages.ACCEPT_CALL&#x27;)
+  async handleAcceptCall(@MessageBody() payload, @ConnectedSocket() client) {
+    const { caller, receiver, signalData } &#x3D; payload;
+
+    const listSocketId &#x3D; (await this.cacheManager.get&lt;string[]&gt;(caller.id)) || [];
+
+    client.to(listSocketId).emit(&#x27;receiver.ACCEPT_CALL&#x27;, {
+      caller,
+      receiver,
+      signalData,
+    });
+  }
+
+  @SubscribeMessage(&#x27;messages.REJECT_CALL&#x27;)
+  async handleRejectCall(@MessageBody() payload, @ConnectedSocket() client) {
+    const { caller, receiver } &#x3D; payload;
+
+    const listSocketId &#x3D; (await this.cacheManager.get&lt;string[]&gt;(caller.id)) || [];
+
+    client.to(listSocketId).emit(&#x27;receiver.REJECT_CALL&#x27;, {
+      caller,
+      receiver,
+    });
+  }
+
+  @SubscribeMessage(&#x27;messages.SELF_REJECT&#x27;)
+  async handleSelfReject(@MessageBody() payload, @ConnectedSocket() client) {
+    const { caller, conversation } &#x3D; payload;
+    const result &#x3D; await this.conversationsService.getFriendInConversation(conversation, caller.id);
+    const members &#x3D; result.members as Profile[];
+    const listSocketId &#x3D; [];
+
+    for (const member of members) {
+      const temp &#x3D; (await this.cacheManager.get&lt;string[]&gt;(member.id)) || [];
+      listSocketId.push(...temp);
+    }
+    client.to(listSocketId).emit(&#x27;messages.SELF_REJECT&#x27;, {
+      caller,
+      conversation,
+    });
+  }
+
+  @SubscribeMessage(&#x27;messages.STOP_CALL&#x27;)
+  async handleStopCall(@MessageBody() payload, @ConnectedSocket() client) {
+    const { userAction, caller, receiver } &#x3D; payload;
+    
+
+    
+    let listSocketId &#x3D; [];
+
+    if (userAction.id &#x3D;&#x3D;&#x3D; receiver.id) {
+      listSocketId &#x3D; await this.cacheManager.get&lt;string[]&gt;(caller.id);
+    } else {
+      listSocketId &#x3D; await this.cacheManager.get&lt;string[]&gt;(receiver.id);
+    }
+
+    client.to(listSocketId).emit(&#x27;messages.STOP_CALL&#x27;, {
+      caller,
+      receiver,
+      userAction,
+    });
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'MessagesGateway.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

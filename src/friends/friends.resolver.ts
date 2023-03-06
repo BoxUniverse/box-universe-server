@@ -1,11 +1,9 @@
-import { Authorization } from '@decorators/Authorization.decorator';
-import { Current } from '@users/types/UserOAuth';
-import { AuthGuard } from '@guards/auth.guard';
+import { Authorization } from '@common/decorators';
+import { AuthGuard } from '@common/guards';
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Query } from '@nestjs/graphql';
-import { ProfilesService } from '@profiles/profiles.service';
-import { FriendsProfile } from './types';
-import { FriendsService } from './friends.service';
+import { Query, Resolver } from '@nestjs/graphql';
+import { Current } from '@src/users';
+import { FriendsProfile, FriendsService } from '@src/friends';
 
 @Resolver()
 @UseGuards(AuthGuard)

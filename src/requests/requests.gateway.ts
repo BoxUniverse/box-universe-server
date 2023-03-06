@@ -6,7 +6,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { ProfilesService } from '@profiles/profiles.service';
+import { ProfilesService } from '@src/profiles';
 import { Cache } from 'cache-manager';
 import { Server, Socket } from 'socket.io';
 import { RequestsService } from './requests.service';

@@ -7,17 +7,19 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 
-import { CacheTTL, CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { without } from 'lodash';
+import { isEmpty, without } from 'lodash';
 import { Server, Socket } from 'socket.io';
-@WebSocketGateway(3005, { cors: true })
+@WebSocketGateway(3005, { cors: true, maxHttpBufferSize: 1e8 })
 export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
   @WebSocketServer() server: Server;
 
   async handleConnection(@ConnectedSocket() client: Socket) {
     const { query } = client.handshake;
+    client.setMaxListeners(200);
+    this.server.setMaxListeners(200);
 
     const idPublisher: string = query?.session as string;
     await this.cacheManager.del('undefined');
@@ -35,13 +37,13 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
         //persist socketId
         if (!filterResult.includes(client.id)) {
           filterResult.push(client.id);
-          await this.cacheManager.set(idPublisher, filterResult, { ttl: 0 });
+          await this.cacheManager.set(idPublisher, filterResult, 0);
         }
       }
     }
   }
   async handleDisconnect(@ConnectedSocket() client: Socket) {
-    console.log('disconnect');
+    //
     const { query } = client.handshake;
     const userId = query?.session as string;
 
@@ -50,7 +52,8 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const listSocketId = await this.cacheManager.get<Array<string>>(userId);
 
       const removedList = without(listSocketId, client.id);
-      await this.cacheManager.set(userId, removedList, { ttl: 0 });
+      if (isEmpty(removedList)) await this.cacheManager.del(userId);
+      else await this.cacheManager.set(userId, removedList, 0);
     }
   }
 

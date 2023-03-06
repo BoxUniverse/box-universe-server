@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConversationsResolver } from './conversations.resolver';
+import { ConversationsResolver } from '@src/conversations';
 
 describe('ConversationsResolver', () => {
   let resolver: ConversationsResolver;

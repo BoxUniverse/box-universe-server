@@ -1,14 +1,11 @@
-import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersResolver } from './users.resolver';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from './users.schema';
-import { UsersRepository } from './users.repository';
+import { ProfilesModule } from '@src/profiles';
+import { S3Module } from '@src/s3';
 import { hashSync } from 'bcrypt';
-import { S3Module } from 'src/s3/s3.module';
 import { random } from 'lodash';
 import * as moment from 'moment';
-import { ProfilesModule } from '@src/profiles/profiles.module';
+import { User, UserSchema, UsersRepository, UsersResolver, UsersService } from './';
 
 @Module({
   imports: [
@@ -35,7 +32,7 @@ import { ProfilesModule } from '@src/profiles/profiles.module';
       },
     ]),
     S3Module,
-    ProfilesModule,
+    forwardRef(() => ProfilesModule),
   ],
   providers: [UsersService, UsersResolver, UsersRepository],
   exports: [UsersService, UsersRepository],

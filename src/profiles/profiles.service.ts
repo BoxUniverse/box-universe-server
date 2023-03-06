@@ -1,15 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { ProfilesRepository } from './profiles.repository';
-import { Profile } from '@profiles/profiles.schema';
-import ProfileInput from './dto/profile.input';
 import { InjectQueue } from '@nestjs/bull';
+import { Injectable } from '@nestjs/common';
+import { ConversationsRepository } from '@src/conversations';
 import { Queue } from 'bull';
+import { Profile, ProfileInput, ProfilesRepository } from '@src/profiles';
 
 @Injectable()
 export class ProfilesService {
   constructor(
+    private readonly conversationsRepository: ConversationsRepository,
     private readonly profilesRepository: ProfilesRepository,
-
     @InjectQueue('profile-queue') private readonly profileQueue: Queue,
   ) {}
 
@@ -30,10 +29,12 @@ export class ProfilesService {
   }
 
   async queueAddFriend(userId: string, friendId: string) {
-    return this.profileQueue.add(
+    const result = this.profileQueue.add(
       'addFriend',
       { userId, friendId },
-      { removeOnComplete: false, removeOnFail: false },
+      { removeOnComplete: true, removeOnFail: false },
     );
+    this.conversationsRepository.createConversation({ members: [userId, friendId] });
+    return result;
   }
 }

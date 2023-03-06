@@ -1,5 +1,5 @@
 import { Catch, ExceptionFilter } from '@nestjs/common';
-import { MongoServerError, MongoError } from 'mongodb';
+import { MongoError, MongoServerError } from 'mongodb';
 
 @Catch(MongoError, MongoServerError)
 export class MongoExceptionFilter implements ExceptionFilter {

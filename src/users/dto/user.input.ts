@@ -1,9 +1,9 @@
+import { IsObjectId } from '@decorators/IsObjectId.decorator';
 import { ArgsType, Field, InputType } from '@nestjs/graphql';
 import { IsEmail, IsJWT, IsOptional, IsString, Length } from 'class-validator';
 import { ObjectId } from 'mongodb';
-import { IsObjectId } from '@decorators/IsObjectId.decorator';
 
-import { User } from '../users.schema';
+import { User } from '@src/users';
 
 @ArgsType()
 @InputType()
