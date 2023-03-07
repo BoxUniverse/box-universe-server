@@ -1,9 +1,11 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { createUnionType, Field, ID, ObjectType, Union } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Post } from '@src/posts';
 import { Profile } from '@src/profiles';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
+import { postMiddleware } from '@common/graphql';
+import { FriendProfile } from '@src/friends';
 
 export type CommentDocument = Comment & mongoose.Document;
 @Schema({
@@ -25,7 +27,10 @@ export class Comment<
   profile: PF;
 
   @Prop({ required: true, type: String })
-  @Field(() => Post)
+  @Field(() => Post, {
+    middleware: [postMiddleware],
+    description: 'if type of this field is string, only get _id, which is returned from middleware',
+  })
   post: P;
 
   @Prop({ required: true, type: String })
@@ -42,5 +47,15 @@ export class Comment<
   @Field(() => String)
   updatedAt: Date;
 }
+export const UnionPost = createUnionType({
+  name: 'UnionPost',
+  types: () => [Post, String] as const,
+  resolveType: (value) => {
+    if ('_id' in value) {
+      return Post;
+    }
+    return 'Profile';
+  },
+});
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

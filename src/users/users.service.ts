@@ -23,7 +23,7 @@ export class UsersService {
   async createUser(createInput: CreateInput): Promise<User> {
     const user = await this.usersRepository.createUser(createInput);
 
-    this.profilesRepository.createProfile({
+    void this.profilesRepository.createProfile({
       provider: 'credentials',
       name: user.email,
       id: user._id.toString(),
@@ -53,7 +53,7 @@ export class UsersService {
     if ('provider' in user) {
       const { id, email, provider } = user;
       const { name } = _OAuthInput;
-      this.profilesRepository.createProfile({
+      void this.profilesRepository.createProfile({
         id,
         name,
         email,
