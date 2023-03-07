@@ -2756,10 +2756,10 @@
     chalk "^4.1.2"
     node-fetch "^2.6.9"
 
-"@nestjs/graphql@^11.0.0-next.2":
-  version "11.0.0-next.2"
-  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-11.0.0-next.2.tgz#c8885bf5acc7a2ef2515495c2c0244155288ac84"
-  integrity sha512-Xpx47ayZ6gCRok/wLIGMTCYkZT2tgN1pwt2BqiL7O2LCAIYBNKbuUP08uDm3ZYZq6el9QU+7B0cyGBgwYu67PQ==
+"@nestjs/graphql@^10.0.14":
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-10.2.0.tgz#ebd3cbab02652d9b4f2d45c6edb84c3df495ed08"
+  integrity sha512-N/sca0eZLJIyyvfusZh1eabGnKBYgQ4LmOCvhI7+oDMiWWK4HOhOEeT5MC11bmd0vq850frWW9qqg+3qRKpiXw==
   dependencies:
     "@graphql-tools/merge" "8.3.18"
     "@graphql-tools/schema" "9.0.16"
@@ -7196,10 +7196,15 @@ graphql-ws@5.11.3, graphql-ws@^5.11.3:
   resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.11.3.tgz#eaf8e6baf669d167975cff13ad86abca4ecfe82f"
   integrity sha512-fU8zwSgAX2noXAsuFiCZ8BtXeXZOzXyK5u1LloCdacsVth4skdBMPO74EG51lBoWSIZ8beUocdpV8+cQHBODnQ==
 
-"graphql@0.13.1 - 16", "graphql@14 - 16", graphql@16.6.0:
+"graphql@0.13.1 - 16", "graphql@14 - 16":
   version "16.6.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.6.0.tgz#c2dcffa4649db149f6282af726c8c83f1c7c5fdb"
   integrity sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==
+
+graphql@15.6.1:
+  version "15.6.1"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.6.1.tgz#9125bdf057553525da251e19e96dab3d3855ddfc"
+  integrity sha512-3i5lu0z6dRvJ48QP9kFxBkJ7h4Kso7PS8eahyTFz5Jm6CvQfLtNIE8LX9N6JLnXTuwR+sIYnXzaWp6anOg0QQw==
 
 handlebars@^4.7.7:
   version "4.7.7"

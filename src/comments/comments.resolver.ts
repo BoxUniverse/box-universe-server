@@ -1,15 +1,26 @@
 import { Authorization } from '@common/decorators';
 import { AuthGuard } from '@common/guards';
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, ID, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import {
+  Args,
+  createUnionType,
+  ID,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql';
 import { Post } from '@src/posts';
 import { Profile, ProfilesService } from '@src/profiles';
-import { Comment, CommentsService } from '@src/comments';
+import { Comment, CommentsService, UnionPost } from '@src/comments';
 import { PUB_SUB } from '@src/pubsub.module';
 import { Current } from '@src/users';
 import { PubSub } from 'graphql-subscriptions';
+import { isString } from 'lodash';
 
-@Resolver()
+@Resolver(() => Comment)
 @UseGuards(AuthGuard)
 export class CommentsResolver {
   /**
@@ -68,11 +79,18 @@ export class CommentsResolver {
     return this.commentsService.getComments(post);
   }
 
-  @Subscription(() => Post, {
+  @Subscription(() => Comment, {
     name: 'commentAdded',
     nullable: true,
   })
   async commentAdded(@Args({ name: 'post', type: () => String }) post: string) {
     return this.pubSub.asyncIterator('commentAdded');
   }
+
+  // @ResolveField(() => UnionPost, {
+  //   name: 'post',
+  // })
+  // async post(@Parent() parent: Comment<Profile, Post | string>) {
+  //   return parent;
+  // }
 }
