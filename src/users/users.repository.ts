@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateInput, OAuthInput, User, UserDocument, UserInput, UserOAuth } from '@src/users';
+import { OAuthInput, User, UserDocument, UserInput, UserOAuth } from '@src/users';
 import { DeleteResult, ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 
@@ -8,7 +8,7 @@ import { Model } from 'mongoose';
 export class UsersRepository {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async getUser(userInput: UserInput): Promise<User> {
+  async getUser(userInput: UserInput.GetUser): Promise<User> {
     return this.userModel.findOne(userInput);
   }
 
@@ -16,8 +16,8 @@ export class UsersRepository {
     return this.userModel.find({});
   }
 
-  async createUser(createInput: CreateInput): Promise<User> {
-    const { username, password, email, provider } = createInput;
+  async createUser(createUserInput: UserInput.CreateUser): Promise<User> {
+    const { username, password, email, provider } = createUserInput;
     return this.userModel.create({
       username,
       password,
@@ -30,12 +30,12 @@ export class UsersRepository {
     });
   }
 
-  async deleteUser(userInput: UserInput): Promise<User> {
-    return this.userModel.remove(userInput);
+  async deleteUser(deleteUserInput: UserInput.DeleteUser): Promise<User> {
+    return this.userModel.remove(deleteUserInput);
   }
 
-  async softDeleteUser(userInput: UserInput): Promise<User> {
-    return this.userModel.findOneAndUpdate(userInput, {
+  async softDeleteUser(deleteUserInput: UserInput.DeleteUser): Promise<User> {
+    return this.userModel.findOneAndUpdate(deleteUserInput, {
       deletedAt: Date.now(),
     });
   }

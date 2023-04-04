@@ -26,6 +26,11 @@ export class MessagesRepository {
   async getMessagesByConversationId(conversationId: string, startValue = null) {
     const result = await this.messageModel.aggregate<MessagesConversation>([
       {
+        $sort: {
+          _id: -1,
+        },
+      },
+      {
         $match: {
           conversation: conversationId,
           _id: { $lt: new ObjectId(startValue) },
@@ -46,11 +51,6 @@ export class MessagesRepository {
         $unwind: {
           path: '$sender',
           preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $sort: {
-          _id: -1,
         },
       },
 

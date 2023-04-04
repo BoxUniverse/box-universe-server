@@ -20,5 +20,6 @@ import {
     ProfilesModule,
   ],
   providers: [CommentsService, CommentsResolver, CommentsRepository],
+  exports: [CommentsService],
 })
 export class CommentsModule {}

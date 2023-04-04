@@ -9,9 +9,15 @@ import {
 
 import { CACHE_MANAGER, Inject } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { isEmpty, without } from 'lodash';
+import { isEmpty, toNumber, without } from 'lodash';
 import { Server, Socket } from 'socket.io';
-@WebSocketGateway(3005, { cors: true, maxHttpBufferSize: 1e8 })
+
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+  },
+  maxHttpBufferSize: 1e8,
+})
 export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
   @WebSocketServer() server: Server;

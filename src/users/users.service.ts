@@ -1,8 +1,8 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
 import { ProfilesRepository } from '@src/profiles';
-import { CreateInput, OAuthInput, User, UserInput, UserOAuth, UsersRepository } from '@src/users';
-import { DeleteResult, ObjectId } from 'mongodb';
+import { OAuthInput, User, UserInput, UserOAuth, UsersRepository } from '@src/users';
+import { DeleteResult } from 'mongodb';
 
 @Injectable()
 export class UsersService {
@@ -12,16 +12,16 @@ export class UsersService {
     private readonly profilesRepository: ProfilesRepository,
   ) {}
 
-  getUser(userInput: UserInput): Promise<User> {
-    return this.usersRepository.getUser(userInput);
+  getUser(getUserInput: UserInput.GetUser): Promise<User> {
+    return this.usersRepository.getUser(getUserInput);
   }
 
   getListUsers(): Promise<User[]> {
     return this.usersRepository.getListUsers();
   }
 
-  async createUser(createInput: CreateInput): Promise<User> {
-    const user = await this.usersRepository.createUser(createInput);
+  async createUser(createUserInput: UserInput.CreateUser): Promise<User> {
+    const user = await this.usersRepository.createUser(createUserInput);
 
     void this.profilesRepository.createProfile({
       provider: 'credentials',
@@ -32,20 +32,16 @@ export class UsersService {
     return user;
   }
 
-  deleteUser(userInput: UserInput): Promise<User> {
-    return this.usersRepository.deleteUser(userInput);
+  deleteUser(deleteUserInput: UserInput.DeleteUser): Promise<User> {
+    return this.usersRepository.deleteUser(deleteUserInput);
   }
 
-  softDeleteUser(userInput: UserInput) {
-    return this.usersRepository.softDeleteUser(userInput);
+  softDeleteUser(deleteUserInput: UserInput.DeleteUser) {
+    return this.usersRepository.softDeleteUser(deleteUserInput);
   }
 
   deleteEntireUser(): Promise<DeleteResult> {
     return this.usersRepository.deleteEntireUser();
-  }
-
-  updateRefreshToken(userId: string | ObjectId, refreshToken: string) {
-    return this.usersRepository.updateRefreshToken(userId, refreshToken);
   }
 
   async OAuth(_OAuthInput: OAuthInput): Promise<User | UserOAuth> {

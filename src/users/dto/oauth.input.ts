@@ -28,5 +28,5 @@ export class OAuthInput {
   @IsNotEmpty()
   @IsString()
   @Field(() => String, { nullable: true })
-  nonce: string;
+  nonce?: string;
 }

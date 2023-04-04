@@ -12,16 +12,22 @@ import helmet from 'helmet';
 import * as os from 'os';
 import { RedisIoAdapter } from '@common/adapters';
 import { EventEmitter } from 'events';
+import * as fs from 'fs';
 
 declare const module: any;
 
 async function bootstrap() {
-  //
+  const httpsOptions = {
+    key: fs.readFileSync('./server-key.pem'),
+    cert: fs.readFileSync('./server.pem'),
+    ca: fs.readFileSync('./rootCA.pem'),
+  };
 
   const cpus = os.cpus().length;
   process.env.UV_THREADPOOL_SIZE = cpus.toString();
   const app = await NestFactory.create(AppModule, {
     snapshot: true,
+    httpsOptions,
   });
   EventEmitter.setMaxListeners(0);
 
@@ -66,6 +72,7 @@ async function bootstrap() {
   app.use(graphqlUploadExpress({ maxFileSize: 2000000, maxFiles: 20 }));
   // app.use(csurf({ cookie: true }));
   await app.listen(process.env.PORT);
+
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());

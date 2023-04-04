@@ -21,6 +21,7 @@
     "paths": {
       "@common/*": ["./src/common/*"],
       "@pipes/*": ["./src/common/pipes/*"],
+      "@helpers/*": ["./src/common/helpers/*"],
       "@validators/*": ["./src/common/validators/*"],
       "@filters/*": ["./src/common/filters/*"],
       "@s3/*": ["./src/s3/*"],

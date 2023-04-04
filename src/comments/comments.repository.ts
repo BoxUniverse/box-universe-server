@@ -1,8 +1,10 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '@src/posts';
 import { Profile } from '@src/profiles';
-import { Comment, CommentDocument } from '@src/comments';
+import { Comment, CommentDocument, CommentInput } from '@src/comments';
 import { Model } from 'mongoose';
+import { first, isEmpty } from 'lodash';
+import { ObjectId } from 'mongodb';
 
 export class CommentsRepository {
   constructor(@InjectModel(Comment.name) private readonly commentModel: Model<CommentDocument>) {}
@@ -57,5 +59,25 @@ export class CommentsRepository {
         },
       },
     ]);
+  }
+
+  async getProfilesCommented(post: string): Promise<CommentInput.ProfilesCommentedPost> {
+    const result = await this.commentModel.aggregate<CommentInput.ProfilesCommentedPost>([
+      {
+        $match: {
+          post,
+        },
+      },
+      {
+        $group: {
+          _id: '$post',
+          profiles: {
+            $addToSet: '$profile',
+          },
+        },
+      },
+    ]);
+    if (!isEmpty(result)) return first(result);
+    return null;
   }
 }

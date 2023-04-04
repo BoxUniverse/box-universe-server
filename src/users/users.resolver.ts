@@ -6,7 +6,7 @@ import { RequireAtLeast } from '@common/pipes';
 import { UseFilters, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { S3Service } from '@src/s3';
-import { CreateInput, Current, User, UserInput, UsersService } from '@src/users';
+import { Current, User, UserInput, UsersService } from '@src/users';
 
 @Resolver(() => User)
 @UseGuards(AuthGuard)
@@ -25,7 +25,9 @@ export class UsersResolver {
     name: 'getUser',
     nullable: true,
   })
-  async getUser(@Args('userInput', new RequireAtLeast()) userInput: UserInput): Promise<User> {
+  async getUser(
+    @Args('getUserInput', new RequireAtLeast()) userInput: UserInput.GetUser,
+  ): Promise<User> {
     return this.usersService.getUser(userInput);
   }
 
@@ -41,7 +43,9 @@ export class UsersResolver {
     name: 'deleteUser',
     nullable: true,
   })
-  async deleteUser(@Args('userInput', new RequireAtLeast()) userInput: UserInput): Promise<User> {
+  async deleteUser(
+    @Args('deleteUserInput', new RequireAtLeast()) userInput: UserInput.DeleteUser,
+  ): Promise<User> {
     return this.usersService.deleteUser(userInput);
   }
 
@@ -49,7 +53,9 @@ export class UsersResolver {
     name: 'softDeleteUser',
     nullable: true,
   })
-  async softDeleteUser(@Args('userInput', new RequireAtLeast()) userInput: UserInput) {
+  async softDeleteUser(
+    @Args('deleteUserInput', new RequireAtLeast()) userInput: UserInput.DeleteUser,
+  ) {
     return this.usersService.softDeleteUser(userInput);
   }
 
@@ -66,7 +72,7 @@ export class UsersResolver {
     nullable: true,
   })
   @UseFilters(MongooseExceptionFilter)
-  async createUser(@Args('createInput') createInput: CreateInput): Promise<User> {
+  async createUser(@Args('createUserInput') createInput: UserInput.CreateUser): Promise<User> {
     return await this.usersService.createUser(createInput);
   }
 }

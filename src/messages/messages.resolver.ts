@@ -34,10 +34,12 @@ export class MessagesResolver {
     @Args({ name: 'payload', type: () => MessageInput.PaginationMessages })
     payload: MessageInput.PaginationMessages,
   ) {
-    return this.messagesService.getMessagesByConversationId(
+    const x = await this.messagesService.getMessagesByConversationId(
       payload.conversationId,
       payload.startValue,
     );
+    console.log(x);
+    return x;
   }
 
   @Mutation(() => Message, {
@@ -55,6 +57,7 @@ export class MessagesResolver {
     for (const file of resultFiles) {
       aPromises.push(this.s3Service.uploadImage(file));
     }
+    // console.log(await Promise.all(aPromises));
     return this.messagesService.sendFiles(
       await Promise.all(aPromises),
       user._id.toString(),

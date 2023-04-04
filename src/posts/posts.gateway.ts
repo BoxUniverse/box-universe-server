@@ -7,11 +7,17 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Cache } from 'cache-manager';
-import { without } from 'lodash';
+import { toNumber, without } from 'lodash';
 import { Server, Socket } from 'socket.io';
 import { PostsService } from '@src/posts';
 
-@WebSocketGateway(3005, { cors: true, maxHttpBufferSize: 1e8 })
+@WebSocketGateway({
+  maxHttpBufferSize: 1e8,
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+})
 @Injectable()
 export class PostsGateway {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}

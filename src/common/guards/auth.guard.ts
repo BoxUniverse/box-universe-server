@@ -9,18 +9,33 @@ export class AuthGuard implements CanActivate {
 
     const secret = process.env.SECRET;
 
-    const ctx = newContext.getContext();
+    const { context: ctx } = newContext.getContext();
+    let headers = null;
+    // INFO: WebSocketContext
+    if (ctx?.connectionParams) {
+      headers = ctx.connectionParams;
+    } else {
+      // Http Context
+      if (ctx.req) {
+        const sym = Object.getOwnPropertySymbols(ctx?.req).find(
+          (s) => s.description === 'kHeaders',
+        );
 
-    const { headers } = ctx?.req;
-
-    const token = (headers?.authorization || headers?.Authorization)?.replace('Bearer ', '');
+        headers = sym ? ctx.req[sym] : null;
+      }
+    }
+    const token = headers?.authorization?.replace('Bearer ', '');
 
     try {
-      ctx.req.user = await decode({ token, secret });
-
+      const result = await decode({ token, secret });
+      if (ctx.req) {
+        ctx.req.user = result;
+      } else {
+        ctx.user = result;
+      }
       return true;
     } catch (error) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Guard Unauthorized');
     }
   }
 }

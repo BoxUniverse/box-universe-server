@@ -128,3 +128,5 @@ dist
 # TernJS port file
 .tern-port
 
+./documentation
+

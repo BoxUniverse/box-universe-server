@@ -9,10 +9,15 @@ import {
 import { ConversationsService } from '@src/conversations';
 import { Profile } from '@src/profiles';
 import { Cache } from 'cache-manager';
-import { isEmpty } from 'lodash';
+import { isEmpty, toNumber } from 'lodash';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway(3005, { cors: true, maxHttpBufferSize: 1e8 })
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+})
 @Injectable()
 export class MessagesGateway {
   constructor(

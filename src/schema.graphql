@@ -2,12 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Provider {
+  id: String
+  type: String!
+}
+
 type User {
   _id: ID!
   username: String
   password: String
   email: String!
-  refreshToken: String
   providers: [Provider!]!
   deletedAt: String!
   createdAt: String!
@@ -19,7 +23,6 @@ type Current {
   username: String
   password: String
   email: String!
-  refreshToken: String
   providers: [Provider!]!
   deletedAt: String!
   createdAt: String!
@@ -29,11 +32,6 @@ type Current {
 
   """id"""
   id: String!
-}
-
-type Provider {
-  id: String
-  type: String!
 }
 
 type Profile {
@@ -102,6 +100,14 @@ type File {
   url: String
 }
 
+type ProfilesCommentedPost {
+  """id post """
+  _id: String!
+
+  """list profile id unique commented in post"""
+  profiles: [String!]!
+}
+
 type Post {
   _id: ID
   content: String
@@ -142,6 +148,15 @@ type Like {
   updatedAt: String!
 }
 
+type Notification {
+  _id: String!
+  body: String!
+  type: String!
+  isRead: String!
+  profile: [Profile!]!
+  deleteAt: String!
+}
+
 type Request {
   _id: ID!
   userRequest: Profile!
@@ -153,7 +168,7 @@ type Request {
 
 type Query {
   me: Current
-  getUser(userInput: UserInput!): User
+  getUser(getUserInput: GetUser!): User
   getListUsers: [User!]
   getEntireProfile: [Profile!]!
   searchUser(searchInput: Search!): [Profile!]!
@@ -165,16 +180,23 @@ type Query {
   getMessagesByConversationId(payload: PaginationMessages!): MessagesConversation
   getEntireFriends: FriendsProfile
   getRequests(request: RetrieveRequest!): [Request!]!
-  getPosts(payload: GetPosts = null): [Post!]
+  getAllNotifications(profile: String!): [Notification!]
+  getNotification(id: String!): Notification
   getComments(post: String!): [Comment!]
+  getProfilesCommented(post: String!): ProfilesCommentedPost!
+  getPosts(payload: GetPosts = null): [Post!]
 }
 
-input UserInput {
+input GetUser {
   _id: String
   username: String
-  password: String
   email: String
-  refreshToken: String
+  provider: ProviderInput
+}
+
+input ProviderInput {
+  id: String
+  type: String!
 }
 
 input Search {
@@ -203,10 +225,10 @@ input GetPosts {
 }
 
 type Mutation {
-  deleteUser(userInput: UserInput!): User
-  softDeleteUser(userInput: UserInput!): User
+  deleteUser(deleteUserInput: DeleteUser!): User
+  softDeleteUser(deleteUserInput: DeleteUser!): User
   deleteEntireUser: DeleteResult
-  createUser(createInput: CreateInput!): User
+  createUser(createUserInput: CreateUser!): User
   uploadAvatar(file: Upload!, id: String!): File
   unfriend(friend: Friend!): Float
   createConversation(infoConversation: CreateConversation!): Boolean
@@ -216,28 +238,29 @@ type Mutation {
   sendFiles(files: [Upload!]!, payload: SendFiles!): Message
   login(loginInput: LoginInput!): User
   OAuth(OAuthInput: OAuthInput!): User!
-  register(createInput: CreateInput!): User!
+  register(createUserInput: CreateUser!): User!
   addRequest(request: CreateRequest!): Request!
   acceptRequest(request: InfoRequest!): Request
   rejectRequest(request: InfoRequest!): Request
-  createPost(post: CreatePost!): Post!
-  deletePost(post: DeletePost!): Post
   commentPost(post: String!, text: String!): Comment!
   deleteComment(id: ID!): Comment!
+  createPost(post: CreatePost!): Post!
+  deletePost(post: DeletePost!): Post
   likePost(post: String!): Like
   unlikePost(post: String!): Float!
 }
 
-input CreateInput {
+input DeleteUser {
+  _id: String
   username: String
-  password: String
   email: String
-  provider: ProviderInput!
 }
 
-input ProviderInput {
-  id: String
-  type: String!
+input CreateUser {
+  username: String!
+  password: String!
+  email: String!
+  provider: ProviderInput
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -308,8 +331,8 @@ input DeletePost {
 type Subscription {
   memberAdded: Conversation
   requestAdded: [Request!]!
-  postAdded(publisher: PublisherSubscriptions): Post!
   commentAdded(post: String!): Comment
+  postAdded(publisher: PublisherSubscriptions): Post!
   newLike(post: String!): Post!
 }
 

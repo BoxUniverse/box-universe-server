@@ -12,7 +12,7 @@ export type ConversationDocument = Conversation & mongoose.Document;
   },
 })
 @ObjectType()
-export class Conversation {
+export class Conversation<M extends string | Profile | Profile<Profile[]> = string> {
   @Field(() => ID, { nullable: false })
   _id?: ObjectId;
 
@@ -22,7 +22,7 @@ export class Conversation {
 
   @Prop({ required: true, type: () => [String], ref: 'Friend' })
   @Field(() => [Profile])
-  members: string[] | Profile[] | Profile<Profile[]>[];
+  members: M[];
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);

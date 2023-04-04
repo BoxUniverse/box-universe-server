@@ -1,7 +1,7 @@
 import { MongooseExceptionFilter } from '@common/filters';
 import { BadRequestException, UseFilters } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { CreateInput, OAuthInput, User, UsersService } from '@src/users';
+import { OAuthInput, User, UserInput, UsersService } from '@src/users';
 import * as crypto from 'crypto';
 import { AuthService } from './auth.service';
 import { LoginInput } from './dto/loginInput.input';
@@ -19,6 +19,9 @@ export class AuthResolver {
     const { username, password, nonce } = loginInput;
     const data = `${username}.${password}.${process.env.SECRET}`;
     const hash = crypto.createHash('md5').update(data).digest('hex');
+
+    if (process.env.NODE_ENV === 'development')
+      return this.authService.validateUser(username, password);
     if (hash === nonce) return this.authService.validateUser(username, password);
     throw new BadRequestException('Request nonce is invalid');
   }
@@ -32,9 +35,9 @@ export class AuthResolver {
     const { id, provider, nonce } = _OAuthInput;
     const data = `${id}.${provider}.${process.env.SECRET}`;
     const hash = crypto.createHash('md5').update(data).digest('hex');
-
+    if (process.env.NODE_ENV === 'development') return this.authService.OAuth(_OAuthInput);
     if (hash === nonce) return this.authService.OAuth(_OAuthInput);
-    else throw new BadRequestException('Error Not Found');
+    throw new BadRequestException('Error Not Found');
   }
 
   @Mutation(() => User, {
@@ -42,8 +45,11 @@ export class AuthResolver {
     nullable: false,
   })
   @UseFilters(MongooseExceptionFilter)
-  public async register(@Args('createInput') createInput: CreateInput) {
-    return await this.usersService.createUser(createInput);
+  public async register(
+    @Args({ name: 'createUserInput', type: () => UserInput.CreateUser })
+    createUserInput: UserInput.CreateUser,
+  ) {
+    return await this.usersService.createUser(createUserInput);
   }
   // @Query(() => AccessTokenResponse, { name: 'refreshAccessToken', nullable: true })
   // public refreshAccessToken(@Args('userInput') userInput: UserInput) {
