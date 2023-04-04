@@ -19,4 +19,8 @@ export class CommentsService {
   async getComments(post: string) {
     return this.commentsRepository.getComments(post);
   }
+
+  async getProfilesCommented(post: string) {
+    return this.commentsRepository.getProfilesCommented(post);
+  }
 }

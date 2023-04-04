@@ -17,6 +17,7 @@ export class RedisIoAdapter extends IoAdapter {
 
     const pubClient = createClient({ url: url });
     const subClient = pubClient.duplicate();
+    await Promise.all([pubClient.connect(), subClient.connect()]);
 
     this.adapterConstructor = createAdapter(pubClient, subClient);
   }

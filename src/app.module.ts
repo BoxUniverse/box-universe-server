@@ -17,11 +17,13 @@ import { RequestsModule } from '@src/requests';
 import { S3Module } from '@src/s3';
 import { UsersModule } from '@src/users';
 import * as redisStore from 'cache-manager-redis-store';
-import { PubSub } from 'graphql-subscriptions';
 import { join } from 'path';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
+import { AppGateway } from '@src/app.gateway';
+import { CacheHelpersModule } from '@helpers/cache';
 
 @Module({
+  providers: [AppGateway],
   imports: [
     DevtoolsModule.register({
       http: process.env.NODE_ENV !== 'production',
@@ -33,23 +35,20 @@ import { DevtoolsModule } from '@nestjs/devtools-integration';
         port: 6379,
       },
     }),
+
+    CacheHelpersModule,
     MongooseModule.forRoot(process.env.MONGO_URL),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
-      playground: true,
+      playground: process.env.NODE_ENV === 'development',
       csrfPrevention: false,
       installSubscriptionHandlers: true,
       subscriptions: {
         'graphql-ws': {
           path: '/graphql',
         },
-        'subscriptions-transport-ws': {
-          path: '/graphql',
-          onConnect: (headers) => {
-            return { req: { headers: headers } };
-          },
-        },
+        'subscriptions-transport-ws': false,
       },
 
       cors: {
@@ -57,7 +56,13 @@ import { DevtoolsModule } from '@nestjs/devtools-integration';
         credentials: true,
       },
       debug: process.env.NODE_ENV === 'development',
-      context: ({ req, res, connection }) => ({ req, res, connection }),
+      context: (req, context) => {
+        if (req?.connectionParams) {
+          return { context: req, info: context };
+        } else {
+          return { context: req };
+        }
+      },
     }),
     PubSubModule,
     S3Module,

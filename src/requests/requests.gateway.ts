@@ -10,8 +10,14 @@ import { ProfilesService } from '@src/profiles';
 import { Cache } from 'cache-manager';
 import { Server, Socket } from 'socket.io';
 import { RequestsService } from './requests.service';
+import { toNumber } from 'lodash';
 
-@WebSocketGateway(3005, { cors: true })
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+})
 @Injectable()
 export class RequestsGateway {
   constructor(
@@ -20,7 +26,6 @@ export class RequestsGateway {
     private readonly profilesService: ProfilesService,
   ) {}
   @WebSocketServer() server: Server;
-
   @SubscribeMessage('subscribe/requests.SEND_REQUEST')
   async handleAddFriend(
     @MessageBody() payload: any,

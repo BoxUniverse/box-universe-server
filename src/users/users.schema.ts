@@ -1,11 +1,18 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Provider } from '@src/users';
+import { UserInput } from '@src/users';
 import { ObjectId } from 'mongodb';
 import mongoose, { Types } from 'mongoose';
 
 export type UserDocument = User & mongoose.Document;
 
+@ObjectType()
+export class Provider {
+  @Field({ nullable: true })
+  id?: string;
+  @Field()
+  type: string;
+}
 @Schema({
   timestamps: {
     createdAt: 'createdAt',
@@ -16,7 +23,6 @@ export type UserDocument = User & mongoose.Document;
 export class User {
   @Field(() => ID, { nullable: false })
   _id: ObjectId;
-
 
   @Field({ nullable: true })
   @Prop({ required: [true, 'This field shoud not be empty'], sparse: true })
@@ -30,12 +36,8 @@ export class User {
   @Prop({ required: [true, 'This field shoud not be empty'], unique: true })
   email: string;
 
-  @Field({ nullable: true })
-  @Prop({ required: false })
-  refreshToken: string;
-
   @Field(() => [Provider])
-  @Prop({ default: {}, type: Types.Array<Provider>  })
+  @Prop({ default: {}, type: Types.Array<Provider> })
   providers: Array<Provider>;
 
   @Field(() => String)

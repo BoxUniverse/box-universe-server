@@ -9,8 +9,13 @@ import {
 import { Cache } from 'cache-manager';
 import { Server, Socket } from 'socket.io';
 import { ProfilesService } from '@src/profiles';
+import { toNumber } from 'lodash';
 
-@WebSocketGateway(3005, { cors: true })
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+  },
+})
 @Injectable()
 export class ProfilesGateway {
   constructor(

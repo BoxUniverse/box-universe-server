@@ -6,7 +6,7 @@ import { FileUpload } from 'graphql-upload';
 import * as mime from 'mime-types';
 @Injectable()
 export class S3Service {
-  async uploadImage(file: FileUpload): Promise<Error | string> {
+  async uploadImage(file: FileUpload): Promise<Error | { url: string; type: string }> {
     const { encoding, mimetype, createReadStream } = file;
     let filename = file.filename;
     const stream = createReadStream();
@@ -49,7 +49,7 @@ export class S3Service {
     mimetype: string,
     filename: string,
     extensionFile: string,
-  ): Promise<Error | string> {
+  ): Promise<Error | { url: string; type: string }> {
     const s3 = new S3();
     return new Promise((resolve, reject) => {
       s3.upload(
@@ -62,7 +62,10 @@ export class S3Service {
         },
         (err: Error, data: ManagedUpload.SendData) => {
           if (err) return reject(err);
-          return resolve(data.Location);
+          return resolve({
+            url: data.Location,
+            type: mimetype,
+          });
         },
       );
     });

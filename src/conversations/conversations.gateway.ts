@@ -10,10 +10,15 @@ import {
 import { Conversation, ConversationsService } from '@src/conversations';
 import { Profile, ProfilesService } from '@src/profiles';
 import { Cache } from 'cache-manager';
-import { isEmpty, uniq } from 'lodash';
+import { isEmpty, isString, uniq, toNumber } from 'lodash';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway(3005, { cors: true })
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+})
 @Injectable()
 export class ConversationsGateway {
   constructor(
@@ -31,15 +36,13 @@ export class ConversationsGateway {
     if (profileId && conversationId && invitorId) {
       //
 
-      const promises = [
+      const result = await Promise.all([
         this.conversationsService.getConversationByIdNoRef(conversationId),
-
         this.profilesService.getProfile({
           id: profileId,
         }),
-      ];
+      ]);
 
-      const result = await Promise.all(promises);
       const conversation: Conversation = (result[0] as Conversation) || null;
       const profile: Profile = (result[1] as Profile) || null;
       if (conversation && profile) {

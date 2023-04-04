@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
 import { UpdateResult } from 'mongodb';
 import { Conversation, ConversationInput, ConversationsRepository } from '@src/conversations';
+import { Profile } from '@src/profiles';
 
 @Injectable()
 export class ConversationsService {
@@ -46,15 +47,18 @@ export class ConversationsService {
     profileId: string[],
   ): Promise<UpdateResult | Conversation> {
     return this.conversationsRepository.addMember(conversationId, profileId);
-    // return {
-    //   modifiedCount: 1,
-    // };
   }
-  async getFriendInConversation(conversationId: string, profileId: string): Promise<Conversation> {
+  async getFriendInConversation(
+    conversationId: string,
+    profileId: string,
+  ): Promise<Conversation<Profile>> {
     return this.conversationsRepository.getFriendInConversation(conversationId, profileId);
   }
 
   async changeNameConversation(payload: ConversationInput.ChangeNameConversation) {
     return this.conversationsRepository.changeNameConversation(payload);
+  }
+  async getProfiles(conversation: string) {
+    return this.conversationsRepository.getConversationByIdNoRef(conversation);
   }
 }

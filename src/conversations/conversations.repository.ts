@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { Conversation, ConversationDocument, ConversationInput } from '@src/conversations';
+import { Profile } from '@src/profiles';
 
 @Injectable()
 export class ConversationsRepository {
@@ -145,7 +146,7 @@ export class ConversationsRepository {
     return null;
   }
 
-  async getConversationByIdNoRef(conversationId: string) {
+  async getConversationByIdNoRef(conversationId: string): Promise<Conversation> {
     return this.conversationModel.findOne({ _id: conversationId });
   }
 
@@ -227,8 +228,11 @@ export class ConversationsRepository {
     }
   }
 
-  async getFriendInConversation(conversationId: string, profileId: string): Promise<Conversation> {
-    const result = await this.conversationModel.aggregate<Conversation>([
+  async getFriendInConversation(
+    conversationId: string,
+    profileId: string,
+  ): Promise<Conversation<Profile>> {
+    const result = await this.conversationModel.aggregate<Conversation<Profile>>([
       {
         $match: {
           _id: new ObjectId(conversationId),

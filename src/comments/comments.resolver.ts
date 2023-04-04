@@ -12,13 +12,12 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
-import { Post } from '@src/posts';
 import { Profile, ProfilesService } from '@src/profiles';
 import { Comment, CommentsService, UnionPost } from '@src/comments';
 import { PUB_SUB } from '@src/pubsub.module';
 import { Current } from '@src/users';
 import { PubSub } from 'graphql-subscriptions';
-import { isString } from 'lodash';
+import { CommentInput } from '@src/comments';
 
 @Resolver(() => Comment)
 @UseGuards(AuthGuard)
@@ -41,13 +40,12 @@ export class CommentsResolver {
     @Args({ name: 'post', type: () => String }) post: string,
     @Args({ name: 'text', type: () => String }) text: string,
   ): Promise<Comment<Profile>> {
-    const promises = [
+    const [comment, profile] = await Promise.all([
       this.commentsService.commentPost(user._id.toString(), post, text),
       this.profilesService.getProfile({
         id: user._id.toString(),
       }),
-    ];
-    const [comment, profile] = await Promise.all(promises);
+    ]);
     const result: Comment<Profile> = {
       ...comment,
       profile: {
@@ -87,10 +85,10 @@ export class CommentsResolver {
     return this.pubSub.asyncIterator('commentAdded');
   }
 
-  // @ResolveField(() => UnionPost, {
-  //   name: 'post',
-  // })
-  // async post(@Parent() parent: Comment<Profile, Post | string>) {
-  //   return parent;
-  // }
+  @Query(() => CommentInput.ProfilesCommentedPost, {
+    nullable: false,
+  })
+  async getProfilesCommented(@Args({ name: 'post', type: () => String }) post: string) {
+    return this.commentsService.getProfilesCommented(post);
+  }
 }
