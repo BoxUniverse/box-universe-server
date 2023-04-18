@@ -1,7 +1,17 @@
-import { Notification, NotificationDocument, NotificationInput } from '@src/notifications';
+import {
+  Notification,
+  NotificationDocument,
+  NotificationInput,
+  PayloadMessageNotification,
+} from '@src/notifications';
 import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import * as moment from 'moment';
+
 export class NotificationsRepository {
-  constructor(private readonly notificationModel: Model<NotificationDocument>) {}
+  constructor(
+    @InjectModel(Notification.name) private readonly notificationModel: Model<NotificationDocument>,
+  ) {}
 
   async findAllNotifications(profile: string): Promise<Notification[]> {
     return this.notificationModel.find({
@@ -15,7 +25,25 @@ export class NotificationsRepository {
     });
   }
 
+  async findNotificationByPayload(payload: PayloadMessageNotification): Promise<Notification> {
+    return this.notificationModel.findOne(payload);
+  }
+
   async notify(payload: NotificationInput.Notify): Promise<Notification> {
-    return new this.notificationModel(payload);
+    const greater = moment().subtract('10', 'm');
+    const now = moment();
+
+    return this.notificationModel.findOneAndUpdate(
+      {
+        ...payload,
+        updatedAt: {
+          $gt: greater,
+        },
+      },
+      {
+        isRead: false,
+      },
+      { upsert: true },
+    );
   }
 }

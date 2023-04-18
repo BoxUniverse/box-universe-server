@@ -9,7 +9,7 @@ import {
 
 import { Cache } from 'cache-manager';
 import { Server, Socket } from 'socket.io';
-import { flattenDeep, isEmpty, toNumber } from 'lodash';
+import { first, flattenDeep, isEmpty, toNumber } from 'lodash';
 import { NotificationsService } from '@src/notifications/notifications.service';
 import { CommentsService } from '@src/comments';
 import { ConversationsService } from '@src/conversations';
@@ -45,10 +45,13 @@ export class NotificationsGateway {
     const [listSocketId, resultNotify] = await Promise.all([
       this.cacheManager.get<Array<string>>(userRequest.id),
       this.notificationsService.notify({
-        profile: userReceive,
-        body: message,
-        type: 'messaging',
-      }),
+        message: {
+          userAction: userRequest.id,
+          userReceive: [userReceive.id],
+        },
+        type: 'request',
+        action: 'accept-request',
+      } as any),
     ]);
 
     if (userRequest && userReceive) {
@@ -65,27 +68,58 @@ export class NotificationsGateway {
 
   @SubscribeMessage('notifications.SEND_NOTIFICATION')
   async handleSendNotification(@MessageBody() payload: any, @ConnectedSocket() client: Socket) {
-    const { message, type } = payload;
+    const { message, type, action } = payload;
 
+    // const promises: Promise<any>[] = [
+    //   this.notificationsService.getNotificationByPayload({
+    //     type: type,
+    //     action,
+    //     message: message,
+    //   } as any),
+    // ];
     const receiver: string[] = [];
     let profiles: string[] = [];
     switch (type) {
       case 'newsfeed': {
-        const { post } = payload;
+        const post = message?.post;
+        if (!post) throw new Error('missing post argument');
         //TODO: get list profile commented  post
-        const profilesCommented = await this.commentsService.getProfilesCommented(post);
-        profiles = profilesCommented.profiles;
+        profiles = (await this.commentsService.getProfilesCommented(post)).profiles;
+
         break;
       }
       case 'message': {
-        const { conversation } = payload;
+        const conversation = message?.conversation;
+
+        if (!conversation) throw new Error('missing conversation argument');
         //TODO: get list profile of conversation
         profiles = (await this.conversationsService.getProfiles(conversation)).members;
         break;
       }
     }
-    if (!isEmpty(profiles))
-      receiver.push(...(await this.cacheHelpersService.getSocketIdsByProfiles(profiles)));
+
+    if (!isEmpty(profiles)) {
+      try {
+        const listPromises: Promise<any>[] = [];
+        let resultNotify = null;
+        let socketIds = null;
+        const resultPromises = await Promise.all([
+          this.notificationsService.notify({
+            type,
+            message: payload.message,
+            action,
+          }),
+          this.cacheHelpersService.getSocketIdsByProfiles(profiles),
+        ]);
+        [resultNotify, socketIds] = resultPromises;
+        console.log(resultPromises);
+
+        receiver.push(...socketIds);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e);
+      }
+    }
     if (!isEmpty(receiver))
       client.to(receiver).emit('notifications.SEND_NOTIFICATION', {
         ...payload,

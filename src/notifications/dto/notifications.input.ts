@@ -1,5 +1,6 @@
 import { ArgsType, Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
 import { IsObjectId } from '@common/decorators';
+import { PayloadMessageNotification } from '@src/notifications';
 
 export namespace NotificationInput {
   @ObjectType()
@@ -8,10 +9,10 @@ export namespace NotificationInput {
     type: string;
 
     @Field(() => String)
-    body: string;
+    action: string;
 
-    @Field(() => [String])
-    profile: string[];
+    @Field(() => PayloadMessageNotification)
+    message: PayloadMessageNotification;
 
     @Field(() => Boolean, {
       nullable: false,

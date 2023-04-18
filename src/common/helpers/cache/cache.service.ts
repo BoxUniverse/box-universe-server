@@ -1,6 +1,6 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { flattenDeep } from 'lodash';
+import { compact, flattenDeep } from 'lodash';
 
 @Injectable()
 export class CacheHelpersService {
@@ -11,6 +11,6 @@ export class CacheHelpersService {
     for (const profile of profiles) {
       promise.push(this.cacheManager.get<string[]>(profile));
     }
-    return flattenDeep<string[]>(await Promise.all(promise));
+    return compact(flattenDeep<string[]>(await Promise.all(promise)));
   }
 }

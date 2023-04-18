@@ -148,12 +148,19 @@ type Like {
   updatedAt: String!
 }
 
+type PayloadMessageNotification {
+  userAction: String!
+  userReceive: [String!]
+  post: String
+  conversation: String
+}
+
 type Notification {
   _id: String!
-  body: String!
+  message: PayloadMessageNotification!
   type: String!
+  action: String!
   isRead: String!
-  profile: [Profile!]!
   deleteAt: String!
 }
 

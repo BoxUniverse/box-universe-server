@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Notification, NotificationsRepository, NotificationInput } from '@src/notifications';
+import {
+  Notification,
+  NotificationsRepository,
+  NotificationInput,
+  PayloadMessageNotification,
+} from '@src/notifications';
 
 @Injectable()
 export class NotificationsService {
@@ -12,5 +17,9 @@ export class NotificationsService {
   }
   async notify(payload: NotificationInput.Notify): Promise<Notification> {
     return this.notificationsRepository.notify(payload);
+  }
+
+  async getNotificationByPayload(payload: PayloadMessageNotification): Promise<Notification> {
+    return this.notificationsRepository.findNotificationByPayload(payload);
   }
 }

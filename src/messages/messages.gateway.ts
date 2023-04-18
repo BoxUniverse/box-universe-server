@@ -100,6 +100,8 @@ export class MessagesGateway {
   @SubscribeMessage('messages.CALL')
   async handleStartCall(@MessageBody() payload, @ConnectedSocket() client) {
     const { caller, conversation, signalData } = payload;
+
+    // console.log('call', payload);
     const result = await this.conversationsService.getFriendInConversation(conversation, caller.id);
     if (result) {
       const members = result.members as Profile[];
@@ -111,6 +113,8 @@ export class MessagesGateway {
       // }
       if (!isEmpty(listSocketId)) {
         // client.emit('call.success', 'success');
+        console.log('is Online');
+        console.log(listSocketId);
         client.to(listSocketId).emit('messages.INCOMING_CALL', {
           caller,
           conversation,
@@ -172,7 +176,7 @@ export class MessagesGateway {
 
     let listSocketId = [];
 
-    if (userAction.id === receiver.id) {
+    if (userAction?.id === receiver.id) {
       listSocketId = await this.cacheManager.get<string[]>(caller.id);
     } else {
       listSocketId = await this.cacheManager.get<string[]>(receiver.id);
