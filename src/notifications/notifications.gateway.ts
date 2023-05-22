@@ -9,7 +9,7 @@ import {
 
 import { Cache } from 'cache-manager';
 import { Server, Socket } from 'socket.io';
-import { first, flattenDeep, isEmpty, toNumber } from 'lodash';
+import { first, flattenDeep, isEmpty, toNumber, uniq } from 'lodash';
 import { NotificationsService } from '@src/notifications/notifications.service';
 import { CommentsService } from '@src/comments';
 import { ConversationsService } from '@src/conversations';
@@ -85,7 +85,8 @@ export class NotificationsGateway {
         if (!post) throw new Error('missing post argument');
         //TODO: get list profile commented  post
         profiles = (await this.commentsService.getProfilesCommented(post)).profiles;
-
+        // owner post
+        profiles = [...profiles, ...message.userReceive];
         break;
       }
       case 'message': {
@@ -97,22 +98,28 @@ export class NotificationsGateway {
         break;
       }
     }
+    profiles = uniq(profiles);
 
     if (!isEmpty(profiles)) {
       try {
         const listPromises: Promise<any>[] = [];
-        let resultNotify = null;
-        let socketIds = null;
-        const resultPromises = await Promise.all([
+        const [resultNotify, socketIds] = await Promise.all([
           this.notificationsService.notify({
             type,
-            message: payload.message,
+            message: {
+              ...payload.message,
+              userAction: {
+                id: payload.message.userAction.id,
+                name: payload.message.userAction.name,
+                email: payload.message.userAction.email,
+                avatar: payload.message.userAction.avatar,
+              },
+              userReceive: profiles,
+            },
             action,
           }),
           this.cacheHelpersService.getSocketIdsByProfiles(profiles),
         ]);
-        [resultNotify, socketIds] = resultPromises;
-        console.log(resultPromises);
 
         receiver.push(...socketIds);
       } catch (e) {

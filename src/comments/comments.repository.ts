@@ -37,12 +37,21 @@ export class CommentsRepository {
     );
   }
 
-  async getComments(post: string) {
+  async getComments(payload: CommentInput.PaginationComment) {
+    const $match = payload?.startValue
+      ? {
+          post: payload.post,
+          _id: { $gt: new ObjectId(payload.startValue) },
+        }
+      : {
+          post: payload.post,
+        };
     return this.commentModel.aggregate<Comment<Profile, Post<Profile>>>([
       {
-        $match: {
-          post,
-        },
+        $match,
+      },
+      {
+        $limit: 10,
       },
       {
         $lookup: {

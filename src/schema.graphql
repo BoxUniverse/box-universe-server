@@ -49,6 +49,13 @@ type FriendProfile {
   friendId: String
 }
 
+type SimpleProfile {
+  id: String!
+  name: String!
+  email: String!
+  avatar: String!
+}
+
 type Conversation {
   _id: ID!
   name: String
@@ -161,7 +168,18 @@ type Notification {
   type: String!
   action: String!
   isRead: String!
-  deleteAt: String!
+  deletedAt: String
+}
+
+type NotificationGroup {
+  _id: String!
+  type: String!
+  action: String!
+  isRead: String!
+  deletedAt: String
+  userReceive: [String!]!
+  post: Post!
+  groupUserAction: [SimpleProfile!]!
 }
 
 type Request {
@@ -187,9 +205,9 @@ type Query {
   getMessagesByConversationId(payload: PaginationMessages!): MessagesConversation
   getEntireFriends: FriendsProfile
   getRequests(request: RetrieveRequest!): [Request!]!
-  getAllNotifications(profile: String!): [Notification!]
+  getNotifications(profile: String!): [NotificationGroup!]
   getNotification(id: String!): Notification
-  getComments(post: String!): [Comment!]
+  getComments(payloadPostComment: PaginationComment!): [Comment!]
   getProfilesCommented(post: String!): ProfilesCommentedPost!
   getPosts(payload: GetPosts = null): [Post!]
 }
@@ -225,6 +243,14 @@ input RetrieveRequest {
   isPending: Boolean!
   isReject: Boolean!
   isAccept: Boolean!
+}
+
+input PaginationComment {
+  """id post"""
+  post: String!
+
+  """continue id comment"""
+  startValue: String
 }
 
 input GetPosts {

@@ -73,8 +73,11 @@ export class CommentsResolver {
     name: 'getComments',
     nullable: true,
   })
-  async getComments(@Args({ name: 'post', type: () => String }) post: string) {
-    return this.commentsService.getComments(post);
+  async getComments(
+    @Args({ name: 'payloadPostComment', type: () => CommentInput.PaginationComment })
+    payloadPostComment: CommentInput.PaginationComment,
+  ) {
+    return this.commentsService.getComments(payloadPostComment);
   }
 
   @Subscription(() => Comment, {

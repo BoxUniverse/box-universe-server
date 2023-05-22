@@ -1,16 +1,24 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { NotificationsService, Notification, NotificationInput } from '@src/notifications';
+import {
+  NotificationsService,
+  Notification,
+  NotificationInput,
+  NotificationGroup,
+} from '@src/notifications';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@common/guards';
 
 @Resolver(() => Notification)
+@UseGuards(AuthGuard)
 export class NotificationsResolver {
   constructor(private readonly notificationsService: NotificationsService) {}
-  @Query(() => [Notification], {
-    name: 'getAllNotifications',
+  @Query(() => [NotificationGroup], {
+    name: 'getNotifications',
     nullable: true,
   })
   async getAllNotifications(
     @Args({ name: 'profile', type: () => String }) profile: string,
-  ): Promise<Notification[]> {
+  ): Promise<NotificationGroup[]> {
     return this.notificationsService.getAllNotifications(profile);
   }
 

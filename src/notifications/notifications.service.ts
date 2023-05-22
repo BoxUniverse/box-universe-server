@@ -4,12 +4,13 @@ import {
   NotificationsRepository,
   NotificationInput,
   PayloadMessageNotification,
+  NotificationGroup,
 } from '@src/notifications';
 
 @Injectable()
 export class NotificationsService {
   constructor(private readonly notificationsRepository: NotificationsRepository) {}
-  async getAllNotifications(profile: string): Promise<Notification[]> {
+  async getAllNotifications(profile: string): Promise<NotificationGroup[]> {
     return this.notificationsRepository.findAllNotifications(profile);
   }
   async getNotification(id: string): Promise<Notification> {

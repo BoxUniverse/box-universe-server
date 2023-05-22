@@ -11,6 +11,7 @@ import {
 // import { Post } from '@src/posts';
 import { IsOptional } from 'class-validator';
 import { Post } from '@src/posts';
+import { ObjectId } from 'mongodb';
 
 export namespace PostInput {
   @ObjectType()

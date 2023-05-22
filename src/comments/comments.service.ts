@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Comment, CommentsRepository } from '@src/comments';
+import { Comment, CommentInput, CommentsRepository } from '@src/comments';
 
 @Injectable()
 export class CommentsService {
@@ -16,8 +16,8 @@ export class CommentsService {
     return this.commentsRepository.deleteComment(_id);
   }
 
-  async getComments(post: string) {
-    return this.commentsRepository.getComments(post);
+  async getComments(payload: CommentInput.PaginationComment) {
+    return this.commentsRepository.getComments(payload);
   }
 
   async getProfilesCommented(post: string) {
